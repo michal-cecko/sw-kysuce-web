@@ -1,45 +1,96 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
-
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
-
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+## Streetworkout Slovakia
+WordPress + PHP | JS + jQuery | Gulp | Sass
 
 ---
 
-## Edit a file
-
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
-
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+### Spustenie / Kompilácia / Inštalácia
 
 ---
 
-## Create a file
+Prvotné skompilovanie assetov:
+1. ```npm install```
+2. ```gulp production```
 
-Next, you’ll add a new file to this repository.
+Watch assetov
+1. ```gulp assets:watch```
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
-
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+Build na produkciu
+1. ```gulp production```
+2. Build sa nachádza v **/dist** adresári
 
 ---
 
-## Clone a repository
+### Wordpress + PHP na backend-e
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+---
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
+**functions.php** - Zoskupenie všetkých functions súborov dokopy, ktoré sa nachádzajú v priečinku /functions
 
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+**functions_theme.php** - Enqueue assetov a ich verziovanie, všeobecné akcie a filtre, theme cleanup od WP zbytočných linkov a scriptov
+
+**functions_posttypes.php** - Registrácia nových post typov a všetky funkcie spojené s nimi
+
+**functions_plugins.php** - Funkcie spojené s pluginmi
+
+**functions_newsletter.php** - Funkcionalita newslettera
+
+**functions_helper.php** - Helper funkcie používané na viacerých miestach
+
+**functions_email.php** - Funkcie spojené s odosielaním emailov z formulárov
+
+**functions_ajax.php** - WP AJAX callbacky
+
+**functions_acf.php** - Registrácia ACF options pages, populatovanie ACF Selectov
+
+---
+
+### WP šablóny, stránky a časti šablón
+
+---
+
+**header.php** + **footer.php** - header a footer
+
+**front-page.php** - Domovská stránka
+
+**template-example.php** - Šáblona špecifickej stránky
+
+**404.php** - 404 page
+
+/**template_parts** - Priečinok so všetkými časťami šablóny na prepoužívanie
+
+---
+
+### Assety - Štýly (Sass)
+
+---
+
+Štýly sa nachádzajú v priečinku */assets/sass*.
+
+>**#1 IMPORTANT**: Pre zachovanie budúceho čítania kódu niekym iným, dodržiavajte vytvorenú štruktúru štýlov!
+
+>**#2 IMPORTANT**: Pre všetky typy selectorov (trieda, id, data atribúty...), ktoré nechcete mať vymazané pri kompilácii pluginom unCSS označte komentárom nasledovne:
+>
+> ```
+> /* uncss:ignore */
+> .selector{
+>   font-weight: regular;
+> }
+>```
+
+---
+
+### Assety - Scripty (TS + VueJS)
+
+---
+
+Scripty sa nachádzajú v priečinku */assets/js*.
+
+Štruktúra:
+
+* /components - VueJS komponenty
+* /libs - JS knižnice
+* general.js - Bežne používané scripty
+
+---
+
+Made by © Synapps

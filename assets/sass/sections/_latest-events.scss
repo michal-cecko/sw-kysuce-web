@@ -1,0 +1,22 @@
+#latestEventsSection{
+  margin-top: 8rem;
+  .swiper-latest-events{
+    min-width: calc(((100vw - 1320px) / 2) + (1320px / 2) + 95px);
+  }
+  .container{
+    position: relative;
+  }
+  .bg-text{
+    position: absolute;
+    left: -8rem;
+    top: 54%;
+    font-size: 150px;
+    line-height: 160px;
+  }
+
+  @include media-breakpoint-down(md){
+    .section-title-container{
+      margin-bottom: 2rem;
+    }
+  }
+}

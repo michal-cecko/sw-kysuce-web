@@ -1,0 +1,49 @@
+// SUBMITTED FORMS METABOX ---- START
+
+#sw-submitted_forms {
+  .inside {
+    padding: 0;
+    margin: 0;
+  }
+
+  .submitted-forms {
+    .row {
+      position: relative;
+      border-bottom: 1px solid #ccc;
+      padding: 1rem 3rem 1rem 1rem;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      .fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        .field {
+          margin-bottom: 0.5rem;
+
+          .name {
+            font-weight: bold;
+          }
+
+          .value {
+          }
+        }
+      }
+    }
+
+    .actions {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+
+      .remove-submitted-row {
+        cursor: pointer;
+      }
+    }
+  }
+
+}
+
+// SUBMITTED FORMS METABOX ---- END

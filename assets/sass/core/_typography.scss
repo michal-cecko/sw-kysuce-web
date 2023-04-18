@@ -1,0 +1,233 @@
+// LABELLED TEXT ---- START
+
+.labelled-text {
+  position: relative;
+  display: inline-block;
+
+  & > span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  &.img {
+    width: auto;
+    height: 64px;
+
+    span {
+      height: 64px;
+    }
+
+    img {
+      width: auto;
+      height: calc(100% + 12px);
+    }
+
+    &.top-aligned {
+      img {
+        transform: translateY(10px);
+      }
+    }
+
+    &.bottom-aligned {
+      img {
+        transform: translateY(-6px);
+      }
+    }
+  }
+
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: 0;
+  }
+
+  &.big {
+    & > span {
+      font-size: 54px;
+      position: relative;
+      z-index: 1;
+    }
+
+    &::before {
+      width: calc(100% + 2rem);
+      left: -1rem;
+      top: 4px;
+      height: 60px;
+      border-radius: 60px;
+    }
+
+    &.img {
+      max-width: 250px;
+
+      &::before {
+        width: 100%;
+        left: 0;
+      }
+    }
+  }
+
+  &.small {
+    font-size: 34px;
+
+    &::before {
+      width: calc(100% + 1rem);
+      left: -0.5rem;
+      top: -5px;
+      height: 32px;
+      border-radius: 40px;
+    }
+
+    &.img {
+      &::before {
+        width: 100%;
+        left: 0;
+      }
+    }
+  }
+
+  &.red {
+    span {
+      color: $primaryWhite;
+    }
+
+    &::before {
+      background: $primaryRed;
+    }
+  }
+
+  &.black {
+    span {
+      color: $primaryWhite;
+    }
+
+    &::before {
+      background: $primaryBlack;
+    }
+  }
+
+  &.white {
+    span {
+      color: $primaryBlack;
+    }
+
+    &::before {
+      background: $primaryWhite;
+    }
+  }
+
+  &.blue {
+    span {
+      color: $primaryBlack;
+    }
+
+    &::before {
+      background: $primaryBlue;
+    }
+  }
+}
+
+// LABELLED TEXT ---- END
+
+
+// HEADINGS ---- START
+
+.heading {
+  font-family: $primaryFont;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  text-align: left;
+  color: $primaryBlack;
+
+  &.on-black {
+    color: $primaryWhite;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $primaryFont;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+h2 {
+  font-size: 40px;
+}
+
+h3 {
+  font-size: 32px;
+}
+
+h4 {
+  font-size: 28px;
+}
+
+h5 {
+  font-size: 24px;
+}
+
+h6 {
+  font-size: 20px;
+}
+
+
+// HEADINGS ---- END
+
+
+// PARAGRAPHS ---- START
+
+.secondary-text {
+  font-family: $secondaryFont;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 27px;
+  color: $secondaryBlack;
+
+  &.on-black {
+    color: $secondaryWhite;
+  }
+}
+
+// PARAGRAPHS ---- END
+
+
+// BIG TEXT IN BACKGROUND ---- START
+
+.bg-text {
+  position: absolute;
+  pointer-events: none;
+  font-family: $primaryFont;
+  font-size: 200px;
+  font-weight: 500;
+  line-height: 288px;
+  letter-spacing: -0.05em;
+  color: $primaryWhite;
+  opacity: 0.3;
+}
+
+// BIG TEXT IN BACKGROUND ---- END
+
+
+// BIG TEXT IN BACKGROUND ---- START
+
+.intro-heading {
+  font-size: 54px;
+  font-weight: 500;
+  line-height: 32px;
+  letter-spacing: -0.05em;
+  text-align: left;
+  margin-bottom: 30px;
+  @media screen and (max-width: 550px) {
+    font-size: 56px;
+    line-height: 54px;
+    margin-bottom: 30px;
+  }
+}
+
+// BIG TEXT IN BACKGROUND ---- END

@@ -1,0 +1,284 @@
+header {
+  padding: 2rem 0;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  transition: all 0.3s ease;
+  top: 0;
+  z-index: 50;
+  background: rgba($primaryBlue, 0);
+
+  .header-wrapper {
+    .logo-container {
+      position: relative;
+      transition: all .3s ease;
+      margin-right: 4.375rem;
+      width: 7rem;
+
+      .logo {
+        position: absolute;
+        max-width: 15rem;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all .3s ease;
+      }
+    }
+
+    nav {
+      ul {
+        gap: 2rem;
+
+        li {
+          a {
+            text-decoration: none;
+            color: $primaryBlack;
+            font-size: 1rem;
+            line-height: 1.5rem;
+          }
+        }
+      }
+    }
+
+    .events-link {
+      margin-right: 3rem;
+      justify-content: flex-end;
+
+      svg {
+        margin-right: 0.4rem;
+
+        path {
+          transition: all 0.3s ease;
+        }
+      }
+
+      .text {
+        color: $primaryBlack;
+      }
+
+      @include media-breakpoint-up(md) {
+        &.all-black{
+          svg {
+            path {
+              stroke: $primaryBlack;
+            }
+          }
+        }
+      }
+    }
+
+    .contact-button {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+      background: $primaryWhite;
+      transition: all 0.3s ease;
+
+      lord-icon {
+        width: 2.5rem;
+        height: auto;
+      }
+
+      @media(hover: hover) {
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+
+  &.white {
+    .events-link {
+      .text {
+        color: $primaryWhite;
+      }
+    }
+
+    .contact-button {
+      background: $primaryWhite;
+    }
+  }
+
+  &.sticky {
+    padding: 1rem 0;
+    background: rgba($primaryBlue, 0.85);
+    backdrop-filter: blur(4px);
+
+    .header-wrapper {
+      .logo-container {
+        .logo {
+          max-width: 6rem;
+        }
+      }
+
+      .events-link {
+        svg {
+          path {
+            stroke: $primaryBlack;
+          }
+        }
+
+        @include media-breakpoint-up(md) {
+          .text {
+            color: $primaryBlack !important;
+          }
+        }
+      }
+      .contact-button {
+        transform: scale(0.7);
+        @media(hover: hover) {
+          &:hover {
+            transform: scale(0.8);
+          }
+        }
+      }
+    }
+
+    &.white {
+      .events-link {
+        .text {
+          color: $primaryWhite;
+        }
+      }
+
+      .contact-button {
+        background: $primaryWhite;
+      }
+    }
+
+  }
+
+  @include media-breakpoint-down(lg) {
+    .header-wrapper {
+      .logo-container {
+        width: 4rem;
+
+        .logo {
+          width: 6rem;
+        }
+      }
+
+      nav {
+        ul {
+          gap: 1.5rem;
+        }
+      }
+
+      .events-link {
+        margin-right: 1.5rem;
+
+        span {
+          color: $primaryBlack !important;
+        }
+
+        svg {
+          path {
+            stroke: $primaryBlack;
+          }
+        }
+      }
+
+      .contact-button {
+        width: 3rem;
+        height: 3rem;
+
+        lord-icon {
+          width: 1.75rem;
+        }
+      }
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    .header-wrapper {
+      width: 100%;
+      justify-content: space-between;
+
+      .logo-container {
+        z-index: 5;
+        height: 3rem;
+
+        .logo {
+          path {
+            transition: all 0.2s ease 0.005s;
+          }
+
+          height: 100%;
+          width: auto;
+        }
+      }
+
+      .toggler-container {
+        z-index: 4;
+
+        .toggler {
+          margin-left: 1rem;
+        }
+      }
+
+      @include headerToggler();
+
+      nav {
+        z-index: 3;
+        position: absolute;
+        background: $primaryBlack;
+        left: 0;
+        top: 0;
+        transition: all 0.3s ease;
+        transform: translateY(-100%);
+        height: 15rem;
+        padding: 7rem 0.75rem 0.75rem 0.75rem;
+
+        ul {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center !important;
+          justify-content: center !important;
+          row-gap: 0.8rem;
+          column-gap: 1.5rem;
+          li {
+            a {
+              color: $primaryWhite;
+              font-size: 1.35rem;
+            }
+          }
+          .events-link{
+            margin: 0 !important;
+            padding: 0 !important;
+            width: fit-content;
+            span{
+              font-size: 1.35rem;
+              color: $primaryWhite !important;
+            }
+            svg{
+              display: none;
+            }
+          }
+          .contact-button{
+            display: none !important;
+          }
+        }
+      }
+    }
+
+    &.openedNavigation {
+      .logo {
+        path {
+          fill: $primaryWhite;
+        }
+      }
+
+      nav {
+        transform: translateY(0);
+      }
+
+      &.sticky{
+        .events-link{
+          span{
+            color: $primaryWhite !important;
+          }
+        }
+      }
+    }
+  }
+}

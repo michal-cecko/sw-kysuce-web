@@ -1,0 +1,33 @@
+// Fonts
+@import "core/fonts";
+
+// Abstract files
+@import "abstracts/breakpoints";
+@import "abstracts/mixins";
+@import "abstracts/variables";
+
+// Vendor Files
+@import "vendor/bootstrap-utilities";
+
+// Core files
+@import "core/defaults";
+@import "core/typography";
+
+// Components
+@import "components/buttons";
+@import "components/forms";
+@import "components/cards";
+@import "components/swipers";
+@import "components/other";
+
+// Layout
+@import "layout/footer";
+@import "layout/header";
+
+// Sections
+@import "sections/latest-events";
+@import "sections/about-card";
+
+// Pages
+@import "pages/homepage";
+@import "pages/blog";

@@ -1,0 +1,290 @@
+// BLOG INTRO ---- START
+
+#blogIntro {
+  .container {
+    position: relative;
+  }
+
+  .bg-text {
+    left: 2rem;
+    bottom: 4vh;
+  }
+
+  .text-container {
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -5vh;
+
+    h1 {
+      max-width: 540px;
+      text-align: center;
+      line-height: 60px;
+
+      > span {
+        &:nth-last-child(1) {
+          margin-left: 0.75rem;
+          transform: translateY(0);
+        }
+      }
+    }
+
+    @media screen and (max-width: 550px) {
+      justify-content: flex-start;
+      h1 {
+        text-align: left;
+      }
+    }
+  }
+}
+
+// BLOG INTRO ---- END
+
+
+// BLOG HIGHLIGHTS ---- START
+
+#blogHighlights {
+  margin-top: -17vh;
+  position: relative;
+
+  @include media-breakpoint-up(md) {
+    width: 100vw;
+    height: 350px;
+  }
+
+  .slick-highlights {
+    width: 100%;
+    @include media-breakpoint-up(md) {
+      min-width: 1600px;
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+    }
+    .slick-slide {
+      padding-inline: 1rem;
+      @media screen and (min-width: 1600px) {
+        max-width: 700px;
+      }
+      @include media-breakpoint-down(md) {
+        padding-inline: 0;
+      }
+
+      .highlight-post {
+        position: relative;
+
+        .img-container {
+          position: relative;
+          aspect-ratio: 840 / 575;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          @include media-breakpoint-down(md) {
+            aspect-ratio: 375 / 450;
+          }
+        }
+
+        .text-container {
+          padding: 1.5rem;
+          background: white;
+          opacity: 0;
+          transition: all 0.4s ease 0.6s;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 70%;
+          height: 80%;
+          transform: translate(-50%, calc(-50% + 1rem));
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          .title {
+            margin-top: 1rem;
+            font-size: 1.6rem;
+            font-weight: 500;
+            line-height: 1.25;
+            letter-spacing: -0.05em;
+            text-align: center;
+          }
+
+          .info-container{
+            justify-content: center;
+          }
+
+          @include media-breakpoint-down(md) {
+            .info-container{
+              .tag{
+                margin-inline: 2rem;
+                margin-bottom: 0.8rem;
+              }
+            }
+            padding: 1.5rem 2.7rem;
+            width: 85%;
+            height: 85%;
+            .title{
+              font-size: 1.9rem;
+            }
+          }
+        }
+      }
+    }
+    .slick-current{
+      .text-container {
+        opacity: 0.95 !important;
+        transform: translate(-50%, -50%) !important;
+      }
+    }
+  }
+  .slick-highlights-arrows {
+    z-index: 500;
+    position: absolute;
+    top: 50%;
+    width: calc(100% - 4rem);
+    left: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transform: translateY(-50%);
+
+    @include media-breakpoint-down(md) {
+      width: calc(100% - 1rem);
+      left: 0.5rem;
+    }
+
+    .slick-arrow {
+      border: 1px solid $border;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      svg {
+        path {
+          transition: all 0.3s ease;
+          stroke: $primaryBlack;
+        }
+      }
+
+      &.prev {
+        transform: rotate(180deg);
+      }
+
+      @include hover() {
+        background: $primaryRed;
+        border: 1px solid $primaryRed;
+        svg {
+          path {
+            stroke: $primaryWhite;
+          }
+        }
+      }
+    }
+  }
+}
+
+// BLOG HIGHLIGHTS ---- END
+
+
+
+
+
+// BLOG POSTS ---- START
+
+#latestNews{
+  margin-top: 100px;
+  .categories{
+    .category{
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid $border;
+      &.active{
+        border: 1px solid $primaryRed;
+        background: $primaryRed;
+        color: $primaryWhite;
+      }
+    }
+  }
+  .posts-wrapper{
+    margin-top: 80px;
+    @include media-breakpoint-down(md) {
+      margin-top: 50px;
+    }
+  }
+  .posts-list{
+    .card{
+      margin-bottom: 3rem;
+    }
+  }
+  .pagination{
+    margin-top: 3rem;
+    .arrow{
+      width: 3.5rem;
+      height: 3.5rem;
+      display: flex;
+      cursor: pointer;
+      justify-content: center;
+      transition: all 0.3s ease;
+      align-items: center;
+      border: 1px solid $primaryBlack;
+      border-radius: 50%;
+      &.arrow-prev{
+        margin-right: 1rem;
+        transform: rotate(180deg);
+      }
+      &.arrow-next{
+        margin-left: 1rem;
+      }
+      &.disabled{
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      svg{
+        width: 8px;
+        height: auto;
+        path{
+          transition: all 0.3s ease;
+          stroke: $primaryBlack;
+        }
+      }
+      @include hover() {
+        background: $primaryBlack;
+        svg{
+          path{
+            stroke: $primaryWhite;
+          }
+        }
+      }
+    }
+
+    .number{
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: transparent;
+      transition: all 0.3s ease;
+      color: $primaryBlack;
+      cursor: pointer;
+      font-size: 0.875rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &.active{
+        background: $primaryRed;
+        color: $primaryWhite;
+      }
+    }
+  }
+}
+
+// BLOG POSTS ---- END

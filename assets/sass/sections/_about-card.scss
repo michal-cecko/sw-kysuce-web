@@ -1,0 +1,138 @@
+#about-card {
+  .abs-img-1,
+  .abs-img-2 {
+    position: absolute;
+    &.abs-img-1{
+      width: 200px;
+      height: 120px;
+      transform: rotate(10deg);
+      top: 20%;
+      z-index: 2;
+      right: -2rem;
+    }
+    &.abs-img-2{
+      z-index: 1;
+      width: 240px;
+      height: 240px;
+      transform: rotate(-5deg);
+      top: 30%;
+      right: 0;
+    }
+    img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .custom-bg{
+    z-index: 1;
+    background: $primaryBlack;
+    position: absolute;
+    width: 120vw;
+    height: 100%;
+    right: 10%;
+    top: 0;
+  }
+
+  .container{
+    padding: 4rem 18rem 4rem 0;
+    position: relative;
+    z-index: 2;
+    min-height: 350px;
+  }
+
+  .img-wrapper{
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    padding: 3rem;
+    .img-container{
+      position: relative;
+      aspect-ratio: 1;
+      width: 100%;
+      height: 100%;
+      max-width: 15rem;
+      max-height: 15rem;
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: rotate(5deg);
+      }
+    }
+
+  }
+
+  .text-container {
+    .heading{
+      font-size: 56px;
+      font-weight: 500;
+      line-height: 62px;
+      letter-spacing: -0.05em;
+    }
+    .secondary-text{
+      padding-left: 1.5rem;
+    }
+    .learn-more-btn{
+      padding-left: 1.5rem;
+      justify-content: flex-start;
+    }
+  }
+
+
+  @include media-breakpoint-down(md) {
+    margin-bottom: 14rem;
+    .abs-img-1,
+    .abs-img-2 {
+      position: absolute;
+      &.abs-img-1{
+        display: none;
+      }
+      &.abs-img-2{
+        width: 300px;
+        bottom: -3rem;
+        right: 50%;
+        top: unset;
+        transform: translateX(50%) rotate(-2deg);
+      }
+      img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    .custom-bg{
+      width: 100vw;
+      right: 0;
+    }
+
+    .container{
+      padding: 4rem 0.75rem 13rem 0.75rem;
+      min-height: unset;
+    }
+
+    .img-wrapper{
+      display: none;
+    }
+
+    .text-container {
+      .heading{
+        font-size: 44px;
+        line-height: 56px;
+      }
+      .secondary-text{
+        padding-left: 0;
+      }
+      .learn-more-btn{
+        padding-left: 0;
+        justify-content: flex-start;
+      }
+    }
+  }
+}

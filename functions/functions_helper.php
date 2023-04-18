@@ -1,0 +1,147 @@
+<?php
+
+// CUSTOM MENU FROM WP MENU
+
+function wp_get_menu_array($menu_name)
+{
+    $locations = get_nav_menu_locations();
+    if (!empty($locations[$menu_name])) {
+        $menu = wp_get_nav_menu_object($locations[$menu_name]);
+        $array_menu = wp_get_nav_menu_items($menu, array('order' => 'DESC'));
+        $menu = array();
+        foreach ($array_menu as $m) {
+            //print_r($m);
+            if (empty($m->menu_item_parent)) {
+                $menu[$m->ID] = array();
+                $menu[$m->ID]['ID'] = $m->ID;
+                $menu[$m->ID]['title'] = $m->title;
+                $menu[$m->ID]['url'] = $m->url;
+                $menu[$m->ID]['children'] = array();
+                $menu[$m->ID]['class'] = $m->current == TRUE ? 'active' : '';
+            }
+        }
+        $submenu = array();
+        foreach ($array_menu as $m) {
+            if ($m->menu_item_parent) {
+                $submenu[$m->ID] = array();
+                $submenu[$m->ID]['ID'] = $m->ID;
+                $submenu[$m->ID]['title'] = $m->title;
+                $submenu[$m->ID]['url'] = $m->url;
+                $submenu[$m->ID]['class'] = $m->current == TRUE ? 'active' : '';
+                if ($m->current == TRUE) {
+                    $menu[$m->menu_item_parent]['class'] = 'active';
+                }
+                $menu[$m->menu_item_parent]['children'][$m->ID] = $submenu[$m->ID];
+            }
+        }
+
+        return $menu;
+    }
+
+    return FALSE;
+}
+
+add_filter('wp_get_nav_menu_items', 'prefix_nav_menu_classes', 10, 3);
+
+function prefix_nav_menu_classes($items, $menu, $args)
+{
+    _wp_menu_item_classes_by_context($items);
+
+    return $items;
+}
+
+//ANOTHER WAY OF CHECKING ACTIVE CLASS
+
+/*function check_active_menu_item( $menu_item ) {
+    $actual_link = ( isset( $_SERVER['HTTPS'] ) ? "https" : "http" ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+    if ( $actual_link == $menu_item['url'] ) {
+        return 'active';
+    }
+    return '';
+}*/
+
+function getNoResultsHTML()
+{
+    echo "nič sa nenašlo";
+}
+
+
+
+function svgIcon($path, array $attributes = [])
+{
+    ob_start();
+    include $path;
+    $html = ob_get_clean();
+
+    if ($svgTagEndPosition = strpos($html, "<svg") !== false && !empty($attributes)) {
+        $attrHtml = "svg";
+        foreach ($attributes as $attr => $value) {
+            $attrHtml .= " " . $attr . "='" . implode(" ", $value) . "' ";
+        }
+        $html = substr_replace($html, $attrHtml, $svgTagEndPosition, 0);
+        if(strpos($html, "<svgsvg") !== false) $html = str_replace("<svgsvg", "<svg", $html);
+    }
+
+    return $html;
+}
+
+function get_template_part_as_string($slug, $args = []) {
+    ob_start();
+    get_template_part($slug, null, $args);
+    $template = ob_get_contents();
+    ob_end_clean();
+    return $template;
+}
+
+
+function reading_time($id) {
+    $content = get_post_field( 'post_content', $id );
+    $word_count = str_word_count( strip_tags( $content ) );
+    $readingtime = ceil($word_count / 200);
+    return $readingtime;
+}
+
+
+
+function printMenu($location) {
+    $menu = wp_get_menu_array("footer-links");
+    if ($menu) {
+        foreach ($menu as $key => $item) { ?>
+            <li>
+                <a class="<?= $item['class'] ?>" href="<?= esc_url($item["url"]); ?>">
+                    <?= esc_attr($item['title']); ?>
+                </a>
+            </li>
+        <?php }
+    } else {
+        echo "<!-- Menu nebolo nájdené  -->";
+    }
+}
+
+
+
+function getPostCategory($post) {
+    $category = get_the_category($post)[0] ?? false;
+    if(in_array($category->term_id, [1])) $category = false;
+    return $category;
+}
+
+
+
+// ASSETS PATHS
+
+function image_path($uri = true) {
+    return ($uri ? get_template_directory_uri() : get_template_directory()) . "/assets/images";
+}
+
+function icon_path($uri = true) {
+    return ($uri ? get_template_directory_uri() : get_template_directory()) . "/assets/icons/";
+}
+
+function script_path($uri = true) {
+    return ($uri ? get_template_directory_uri() : get_template_directory()) . "/assets/js";
+}
+
+function favicon_path($uri = true) {
+    return ($uri ? get_template_directory_uri() : get_template_directory()) . "/assets/favicon";
+}

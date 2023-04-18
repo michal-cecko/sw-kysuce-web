@@ -1,0 +1,233 @@
+.card {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.dot-divided-info {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+
+  span {
+    font-family: $secondaryFont;
+    font-size: 0.875rem;
+    font-weight: 300;
+    line-height: 1.3125rem;
+    color: $secondaryBlack;
+
+    &:not(:first-child) {
+      &::before {
+        content: "";
+        width: 0.3rem;
+        height: 0.3rem;
+        display: inline-block;
+        border-radius: 50%;
+        margin: 0 0.5rem;
+        transform: translateY(-2px);
+        background: $secondaryBlack;
+      }
+    }
+  }
+
+  &.red-dot {
+    span {
+      &:not(:first-child) {
+        &::before {
+          background: $primaryRed;
+        }
+      }
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    span {
+      font-size: 1rem;
+      line-height: 1.3125rem;
+
+      &:not(:first-child) {
+        &::before {
+          content: "";
+          width: 0.4rem;
+          height: 0.4rem;
+          margin: 0 0.6rem;
+        }
+      }
+    }
+  }
+}
+
+
+// TAGS --- START
+
+.tag {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 3.75rem;
+  width: fit-content;
+  font-weight: 400;
+  line-height: 1.5;
+
+  @include media-breakpoint-down(md) {
+    font-size: 1rem;
+    padding: 0.5rem 1.25rem;
+  }
+
+  &.red {
+    background: $primaryRed;
+    color: $primaryWhite;
+  }
+
+  &.black {
+    color: $primaryWhite;
+    background: $primaryBlack;
+  }
+
+  &.white {
+    color: $primaryBlack;
+    background: $primaryWhite;
+  }
+
+  &.blue {
+    color: $primaryBlack;
+    background: $primaryBlue;
+  }
+}
+
+
+// TAGS --- END
+
+
+// ARTICLE CARD --- START
+
+.article-card {
+  .img-container {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1.45;
+    width: 100%;
+    height: 100%;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .text-container {
+    .title {
+      font-family: $primaryFont;
+      font-weight: 500;
+    }
+  }
+
+  &.size-big {
+    .title {
+      font-size: 2rem;
+      line-height: 2.375rem;
+      letter-spacing: -0.05em;
+    }
+  }
+
+  &.size-small {
+    .title {
+      font-size: 1.25rem;
+      line-height: 1.5rem;
+      letter-spacing: -0.05em;
+    }
+
+    @include media-breakpoint-down(md) {
+      .title {
+        font-size: 1.45rem;
+        line-height: 1.25;
+      }
+    }
+  }
+
+  &.is-column {
+    &.size-small {
+      .text-container {
+        .info-container {
+          margin-top: 1.3rem;
+        }
+      }
+    }
+
+    &.size-big {
+      .text-container {
+        .info-container {
+          margin-top: 1rem;
+        }
+      }
+    }
+
+  }
+
+  &.is-row {
+    align-items: center;
+
+    .img-container {
+      max-width: 270px;
+    }
+
+    .text-container {
+      margin-left: 1rem;
+    }
+
+    &.lg-column {
+      @include media-breakpoint-down(lg) {
+        flex-direction: column !important;
+        align-items: flex-start;
+        .text-container {
+          margin-top: 1rem;
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+// ARTICLE CARD --- END
+
+.info-container {
+  display: flex;
+  align-items: center;
+  flex-flow: row wrap;
+  row-gap: 0.35rem;
+  margin-bottom: 0.65rem;
+  column-gap: 1rem;
+}
+
+
+// EVENT CARD --- START
+
+.event-card {
+  .img-container {
+    width: 100%;
+    height: 14rem;
+
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .title {
+    margin-top: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.5rem;
+  }
+}
+
+// EVENT CARD --- END
