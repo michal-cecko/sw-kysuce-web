@@ -203,18 +203,6 @@
 
 #latestNews{
   margin-top: 100px;
-  .categories{
-    .category{
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border: 1px solid $border;
-      &.active{
-        border: 1px solid $primaryRed;
-        background: $primaryRed;
-        color: $primaryWhite;
-      }
-    }
-  }
   .posts-wrapper{
     margin-top: 80px;
     @include media-breakpoint-down(md) {
@@ -288,3 +276,21 @@
 }
 
 // BLOG POSTS ---- END
+
+
+
+
+.categories{
+  overflow-x: auto;
+  overflow-y: hidden;
+  .category{
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid $border;
+    &.active{
+      border: 1px solid $primaryRed;
+      background: $primaryRed;
+      color: $primaryWhite;
+    }
+  }
+}

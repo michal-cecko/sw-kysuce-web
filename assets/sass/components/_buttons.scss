@@ -7,14 +7,15 @@
   justify-content: center;
   color: $primaryRed;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 1.125rem;
   background: none;
   border: none;
+  width: fit-content;
   line-height: 150%;
 
   .icon{
-    width: 48px;
-    height: 48px;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -22,6 +23,55 @@
     background: $primaryRed;
     margin-left: 0.75rem;
   }
+
+  &.down{
+    .icon{
+      transform: rotate(90deg);
+    }
+  }
+
+  &.bigger{
+    .icon{
+      width: 4rem;
+      height: 4rem;
+    }
+  }
 }
 
 // LEARN MORE BTN --- END
+
+
+
+
+// BUTTONS --- START
+
+.btn {
+  border-radius: 3rem;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  border: 0;
+  outline: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+
+  span {
+    font-family: $secondaryFont;
+    font-weight: 400;
+  }
+
+  &.btn--medium {
+    font-size: 1.125rem;
+    line-height: 1.6875rem;
+  }
+
+   &.btn--red {
+     background: $primaryRed;
+     span{
+       color: $primaryWhite;
+     }
+   }
+}
+
+// BUTTONS --- END

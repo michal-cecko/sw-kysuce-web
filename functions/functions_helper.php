@@ -66,7 +66,6 @@ function getNoResultsHTML()
 }
 
 
-
 function svgIcon($path, array $attributes = [])
 {
     ob_start();
@@ -79,13 +78,14 @@ function svgIcon($path, array $attributes = [])
             $attrHtml .= " " . $attr . "='" . implode(" ", $value) . "' ";
         }
         $html = substr_replace($html, $attrHtml, $svgTagEndPosition, 0);
-        if(strpos($html, "<svgsvg") !== false) $html = str_replace("<svgsvg", "<svg", $html);
+        if (strpos($html, "<svgsvg") !== false) $html = str_replace("<svgsvg", "<svg", $html);
     }
 
     return $html;
 }
 
-function get_template_part_as_string($slug, $args = []) {
+function get_template_part_as_string($slug, $args = [])
+{
     ob_start();
     get_template_part($slug, null, $args);
     $template = ob_get_contents();
@@ -94,16 +94,17 @@ function get_template_part_as_string($slug, $args = []) {
 }
 
 
-function reading_time($id) {
-    $content = get_post_field( 'post_content', $id );
-    $word_count = str_word_count( strip_tags( $content ) );
+function reading_time($id)
+{
+    $content = get_post_field('post_content', $id);
+    $word_count = str_word_count(strip_tags($content));
     $readingtime = ceil($word_count / 200);
     return $readingtime;
 }
 
 
-
-function printMenu($location) {
+function printMenu($location)
+{
     $menu = wp_get_menu_array("footer-links");
     if ($menu) {
         foreach ($menu as $key => $item) { ?>
@@ -119,29 +120,120 @@ function printMenu($location) {
 }
 
 
-
-function getPostCategory($post) {
+function getPostCategory($post)
+{
     $category = get_the_category($post)[0] ?? false;
-    if(in_array($category->term_id, [1])) $category = false;
+    if (in_array($category->term_id, [1])) $category = false;
     return $category;
 }
 
 
-
 // ASSETS PATHS
 
-function image_path($uri = true) {
+function image_path($uri = true)
+{
     return ($uri ? get_template_directory_uri() : get_template_directory()) . "/assets/images";
 }
 
-function icon_path($uri = true) {
+function icon_path($uri = true)
+{
     return ($uri ? get_template_directory_uri() : get_template_directory()) . "/assets/icons/";
 }
 
-function script_path($uri = true) {
+function script_path($uri = true)
+{
     return ($uri ? get_template_directory_uri() : get_template_directory()) . "/assets/js";
 }
 
-function favicon_path($uri = true) {
+function favicon_path($uri = true)
+{
     return ($uri ? get_template_directory_uri() : get_template_directory()) . "/assets/favicon";
+}
+
+
+function getSharerLink($network, $url)
+{
+    switch ($network) {
+        case "facebook":
+            return "https://www.facebook.com/sharer/sharer.php?u=" . $url;
+        case "linkedin":
+            return "https://www.linkedin.com/sharing/share-offsite/?url=" . $url;
+        case "twitter":
+            return "https://twitter.com/share?url=" . $url;
+        default:
+            return "";
+    }
+}
+
+function get_author_description_by_id($user_id)
+{
+    $user = get_user_by('ID', $user_id); // Get user object by user ID
+    if (!$user) {
+        return false; // Return false if user not found
+    }
+
+    // Retrieve the 'description' user meta field
+    return get_user_meta($user_id, 'description', true);
+}
+
+function getMonthName($month)
+{
+    switch ($month) {
+        case 1:
+            return "Január";
+        case 2:
+            return "Február";
+        case 3:
+            return "Marec";
+        case 4:
+            return "Apríl";
+        case 5:
+            return "Máj";
+        case 6:
+            return "Jún";
+        case 7:
+            return "Júl";
+        case 8:
+            return "August";
+        case 9:
+            return "September";
+        case 10:
+            return "Október";
+        case 11:
+            return "November";
+        case 12:
+            return "December";
+    }
+}
+
+
+function getEventDate($event)
+{
+    ob_start();
+    $dateStart = get_field("date_start", $event);
+    $dateEnd = get_field("date_end", $event);
+    $dayStart = date("d", strtotime($dateStart));
+    $monthStart = date("n", strtotime($dateStart));
+    $yearStart = date("Y", strtotime($dateStart));
+    if (!empty($dateEnd) && $dateEnd !== $dateStart) :
+        $dayEnd = date("d", strtotime($dateEnd));
+        $yearEnd = date("Y", strtotime($dateEnd));
+        $monthEnd = date("n", strtotime($dateEnd));
+
+        if ($monthEnd === $monthStart) : ?>
+
+            <?= $dayStart ?>. - <?= $dayEnd ?>. <?= strtolower(getMonthName($monthStart)) ?> <?= $yearStart ?>
+
+        <?php else : ?>
+
+            <?= $dayStart ?>. <?= strtolower(getMonthName($monthStart)) ?> <?= $yearStart ?> - <?= $dayEnd ?>. <?= strtolower(getMonthName($monthEnd)) ?> <?= $yearEnd ?>
+
+        <?php endif ?>
+
+    <?php else : ?>
+
+        <?= $dayStart ?>. <?= strtolower(getMonthName($monthStart)) ?> <?= $yearStart ?>
+
+    <?php endif;
+    return ob_get_clean();
 }

@@ -1,0 +1,308 @@
+// SINGLE INTRO ---- START
+
+#articleIntro {
+  .container {
+    position: relative;
+  }
+
+  .intro-text-container {
+    height: 80vh;
+    z-index: 3;
+    position: relative;
+
+    .share-icon {
+      cursor: pointer;
+      width: 3.5rem;
+      height: 3.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: $primaryBlack;
+      transition: 0.3s ease all;
+      @include hover() {
+        background: $primaryRed;
+      }
+    }
+
+    .title {
+      font-size: 3.5rem;
+      font-weight: 500;
+      line-height: 3.875rem;
+      letter-spacing: -0.05em;
+    }
+  }
+
+  .bg-text {
+    left: 4rem;
+    bottom: -10vh;
+  }
+
+  @include media-breakpoint-down(md) {
+    .bg-text {
+      left: 1rem;
+      bottom: 6vh;
+      font-size: 160px;
+      z-index: 2;
+    }
+
+    .intro-text-container {
+      height: 100vh;
+
+      .dot-divided-info {
+        justify-content: center !important;
+
+        .info-container {
+          width: 100% !important;
+          justify-content: center;
+        }
+      }
+
+      .title {
+        text-align: center;
+        font-size: 3rem;
+      }
+
+      .learn-more-btn {
+        margin-inline: auto;
+      }
+    }
+  }
+}
+
+// SINGLE INTRO ---- END
+
+
+// THUMBNAIL ---- START
+
+#thumbSection {
+  width: 100%;
+  height: 30vh;
+  min-height: 480px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+}
+
+// THUMBNAIL ---- END
+
+
+// CONTENT ---- START
+
+#blogContent {
+  width: 100%;
+  margin-top: -12vh;
+
+  .article-container {
+    background: $primaryWhite;
+    display: block;
+    margin-inline: auto;
+    max-width: 980px;
+    width: 100%;
+    padding: 80px 100px 0 100px;
+
+    .content-container {
+      *{
+        font-family: $secondaryFont;
+      }
+      p {
+        margin-bottom: 2rem;
+        color: $secondaryBlack;
+        font-size: 1.125rem;
+        font-weight: 400;
+        line-height: 1.6875rem;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: $primaryFont;
+        color: $primaryBlack;
+        margin-bottom: 2rem;
+      }
+
+      figure {
+        width: 100%;
+        margin-bottom: 2rem;
+        img {
+          width: 100%;
+        }
+
+        figcaption {
+          text-align: center;
+          color: $secondaryBlack;
+          font-family: $secondaryFont;
+        }
+      }
+
+      .placement{
+        width: 100%;
+        background: $primaryBlack;
+        .place{
+          padding: 2.25rem 2.5rem;
+          width: 100%;
+          border-bottom: 1px solid rgba(#ffffff, 0.12);
+          &:last-child{
+            border-bottom: 0;
+          }
+          .name{
+            color: $primaryWhite;
+            font-weight: 600;
+            font-family: $secondaryFont;
+            font-size: 1.125rem;
+            line-height: 1.6875rem;
+          }
+          .desc{
+            color: $secondaryWhite;
+            font-family: $secondaryFont;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5rem;
+          }
+          @include media-breakpoint-down(md){
+            .tag{
+              margin-bottom: 1.5rem;
+            }
+            .name{
+              margin-bottom: 1.5rem;
+            }
+          }
+        }
+      }
+
+      ul, ol {
+        padding-left: 2rem;
+        margin-bottom: 2rem;
+
+        li {
+          margin-bottom: 0.5rem;
+          color: $primaryBlack;
+          position: relative;
+          font-size: 1.125rem;
+          font-weight: 400;
+          line-height: 1.6875rem;
+
+          &::before {
+            display: block;
+            content: "";
+            position: absolute;
+            left: -1.1rem;
+            height: 0.3rem;
+            width: 0.3rem;
+            border-radius: 50%;
+            background: $secondaryBlack;
+            top: 0.7rem;
+          }
+        }
+      }
+
+
+      // GALLERY START
+
+      /* Style the gallery container */
+      .wp-block-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      /* Style the gallery images */
+      .wp-block-gallery img {
+        width: 100%;
+        height: auto;
+      }
+
+      /* Style the gallery captions */
+      .wp-block-gallery .wp-block-image {
+        flex-basis: calc(33.33% - 10px);
+        margin-bottom: 1.25rem;
+        text-align: center;
+        @include media-breakpoint-down(md) {
+          flex-basis: 100%;
+        }
+      }
+
+      .wp-block-gallery figcaption {
+        min-height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        font-weight: 500;
+        color: $primaryWhite;
+        background: linear-gradient(0deg, rgba(0, 0, 0, .7), rgba(0, 0, 0, .3) 70%, transparent);
+      }
+
+      //GALLERY END
+
+
+      blockquote {
+        margin-bottom: 2rem;
+
+        cite {
+          padding-left: 2rem;
+          color: $primaryBlack;
+          font-weight: 500;
+        }
+      }
+
+      figcaption {
+        font-size: 0.8rem;
+      }
+
+      .wp-block-table {
+        td {
+          border-color: #b7babd;
+        }
+
+        figcaption {
+          margin-top: 0.4rem;
+        }
+      }
+
+      .wp-block-file {
+        margin-bottom: 2rem;
+
+        .wp-element-button {
+          padding: 0.5rem 1.3rem;
+        }
+
+        a:not(.wp-element-button) {
+          color: $primaryBlack;
+          font-weight: 500;
+          font-size: 1.1rem;
+        }
+      }
+
+
+      .wp-block-embed {
+        iframe {
+          width: 100%;
+        }
+      }
+
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    margin-top: 0;
+    .article-container {
+      width: 100%;
+      padding: 60px 15px 0 15px;
+      .wp-block-table{
+        padding-bottom: 0.9rem;
+        table{
+          min-width: 40rem;
+          overflow-y: hidden;
+          overflow-x: auto;
+        }
+      }
+    }
+  }
+}
+
+// CONTENT ---- END

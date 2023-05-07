@@ -73,7 +73,7 @@ $pinnedEvent = new WP_Query($args);
             <?php if ($latestArticles->have_posts()) : ?>
                 <div class="d-lg-block d-none">
                     <div class="news-container">
-                             <span class="tag red small">
+                         <span class="tag red small">
                             <?= svgIcon(icon_path(false) . "icon-flame.svg", ['class' => ['mr-1']]) ?>
                             <?= __("Novinky", "swslovakia") ?>
                         </span>

@@ -51,3 +51,47 @@ function sw_get_posts()
 
     wp_send_json($final, 200);
 }
+
+
+//EVENTS
+
+add_action('wp_ajax_get_events_by_year', 'sw_get_events_by_year');
+add_action('wp_ajax_nopriv_get_events_by_year', 'sw_get_events_by_year');
+
+function sw_get_events_by_year()
+{
+    $year = $_GET['year'] ?? false;
+
+    if (!$year) {
+        wp_send_json_error("Nebol zadaný rok.");
+    }
+
+    $args = [
+        'post_type' => 'event',
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'posts_per_page' => -1,
+        'order' => 'DESC',
+        'meta_query' => [
+            "relation" => "AND",
+            [
+                'key' => 'date_start',
+                'value' => [$year . '-01-01', $year . '-12-31'],
+                'compare' => 'BETWEEN',
+                'type' => 'DATE',
+            ],
+            [
+                'key' => 'date_start',
+                'value' => date('Y-m-d'),
+                'compare' => '<',
+                'type' => 'DATE'
+            ]
+        ],
+    ];
+
+    $posts = new WP_Query($args);
+    $final = [];
+    $final['content'] = get_template_part_as_string("template_parts/events/past-events-archive", ['events' => $posts]);
+
+    wp_send_json($final, 200);
+}

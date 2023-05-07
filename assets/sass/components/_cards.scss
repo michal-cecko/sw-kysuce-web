@@ -78,19 +78,42 @@
     padding: 0.5rem 1.25rem;
   }
 
+  &.medium{
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
   &.red {
     background: $primaryRed;
     color: $primaryWhite;
+
+    &.outlined {
+      background: transparent;
+      color: $primaryRed;
+      border: 1px solid $primaryRed;
+    }
   }
 
   &.black {
     color: $primaryWhite;
     background: $primaryBlack;
+
+    &.outlined {
+      background: transparent;
+      color: $primaryBlack;
+      border: 1px solid $primaryBlack;
+    }
   }
 
   &.white {
     color: $primaryBlack;
     background: $primaryWhite;
+
+    &.outlined {
+      background: transparent;
+      color: $primaryWhite;
+      border: 1px solid $primaryWhite;
+    }
   }
 
   &.blue {
@@ -211,22 +234,62 @@
 // EVENT CARD --- START
 
 .event-card {
-  .img-container {
-    width: 100%;
-    height: 14rem;
+  padding: 2rem;
+  background: $primaryBlack;
 
-    img {
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-    }
+  .tags{
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 0.3rem;
+    column-gap: 0.5rem;
   }
 
   .title {
-    margin-top: 0.75rem;
-    font-size: 1.25rem;
+    color: $primaryWhite;
+    font-size: 1.5rem;
     font-weight: 500;
-    line-height: 1.5rem;
+    line-height: 1.8125rem;
+    margin-block: 2rem;
+  }
+
+  .where-when-container {
+    background: rgba($primaryWhite, 0.08);
+    border-radius: 1.5rem;
+
+    .part {
+      display: flex;
+      align-items: center;
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba($primaryBlack, 0.08);
+      &:last-child{
+        border-bottom: 0;
+      }
+      .icon {
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background: $primaryRed;
+        margin-right: 1rem;
+        svg {
+          height: 1.25rem;
+          width: auto;
+        }
+      }
+      p{
+        color: $primaryWhite;
+        font-family: $secondaryFont;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5rem;
+      }
+    }
+  }
+
+  .btn{
+    margin-top: 2rem;
   }
 }
 

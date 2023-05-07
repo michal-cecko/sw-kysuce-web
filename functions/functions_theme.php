@@ -36,9 +36,6 @@ function theme_cleanup(): void
     remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
     remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );*/
 
-    // Remove the REST API endpoint.
-    remove_action('rest_api_init', 'wp_oembed_register_route');
-
     // Remove the REST API lines from the HTML Header
     remove_action('wp_head', 'rest_output_link_wp_head', 10);
 
@@ -147,6 +144,7 @@ function enqueue_component($name, $defaultPHPVars = [], ...$moreVals)
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts_links');
 function enqueue_custom_scripts_links(): void
 {
+    $user = wp_get_current_user();
     $defaultPHPVars = [
         'homeUrl' => get_home_url(),
         'ajaxUrl' => admin_url('admin-ajax.php')
@@ -161,6 +159,7 @@ function enqueue_custom_scripts_links(): void
     wp_enqueue_style('swiper-css', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.0.5/swiper-bundle.css');
     wp_enqueue_script('lordicon-js', 'https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js');
     wp_enqueue_script('aos-js', 'https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js');
+    wp_enqueue_script('fslightbox-js', 'https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.0.9/index.min.js');
     wp_enqueue_script('lazyload-js', get_template_directory_uri() . '/assets/js/libs/lazyload.min.js');
 
     if(is_page_template("template-blog.php")) {
@@ -174,7 +173,7 @@ function enqueue_custom_scripts_links(): void
     wp_register_script(
         "general-js",
         get_template_directory_uri() . '/dist/js/general.js',
-        false,
+        ['jquery'],
         VERSION,
         TRUE
     );
@@ -191,6 +190,10 @@ function enqueue_custom_scripts_links(): void
 
     if ($currentPageSlug == "blog") {
         enqueue_component("blog");
+    }
+
+    if ($currentPageSlug == "podujatia-a-sutaze") {
+        enqueue_component("events");
     }
 
 
@@ -211,6 +214,8 @@ function enqueue_custom_scripts_links(): void
 
 function admin_enqueue_scripts()
 {
+    $user = wp_get_current_user();
+
     $defaultPHPVars = [
         'homeUrl' => get_home_url(),
         'ajaxUrl' => admin_url('admin-ajax.php'),
@@ -219,6 +224,10 @@ function admin_enqueue_scripts()
 
     wp_register_style('admin-css', get_template_directory_uri() . '/dist/css/admin.css', FALSE, time());
     wp_enqueue_style('admin-css');
+
+    if( in_array('usporiadatel', $user->roles) ){
+        wp_enqueue_style('usporiadatel-css', get_template_directory_uri() . '/dist/css/admin/usporiadatel.css', FALSE, time());
+    }
 
     wp_register_script(
         "admin-js",
