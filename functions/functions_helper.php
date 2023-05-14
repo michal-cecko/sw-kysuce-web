@@ -210,8 +210,8 @@ function getMonthName($month)
 function getEventDate($event)
 {
     ob_start();
-    $dateStart = get_field("date_start", $event);
-    $dateEnd = get_field("date_end", $event);
+    $dateStart = get_field("event_start", $event);
+    $dateEnd = get_field("event_end", $event);
     $dayStart = date("d", strtotime($dateStart));
     $monthStart = date("n", strtotime($dateStart));
     $yearStart = date("Y", strtotime($dateStart));
@@ -236,4 +236,29 @@ function getEventDate($event)
 
     <?php endif;
     return ob_get_clean();
+}
+
+
+
+
+function checkCaptcha($responseToken)
+{
+    $secretKey = '***REMOVED***';
+
+    // Send a POST request to the reCAPTCHA verification API
+    $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, [
+        'secret' => $secretKey,
+        'response' => $responseToken
+    ]);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    // Decode the response JSON
+    $decodedResponse = json_decode($response);
+
+    // Check if the response was successful and the score is high enough
+    return $decodedResponse->success && $decodedResponse->score >= 0.5;
 }

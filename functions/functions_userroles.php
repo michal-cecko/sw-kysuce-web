@@ -25,3 +25,15 @@ function restrict_usporiadatel_role()
     }
 }
 add_action('admin_menu', 'restrict_usporiadatel_role');
+
+function redirect_to_events() {
+    $user = wp_get_current_user();
+    if( in_array('usporiadatel', $user->roles)){
+        global $pagenow;
+        if ( $pagenow === 'index.php' ) {
+            wp_redirect( admin_url( 'edit.php?post_type=event' ) );
+            exit();
+        }
+    }
+}
+add_action( 'admin_init', 'redirect_to_events' );

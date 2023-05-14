@@ -1,0 +1,90 @@
+#eventIntro {
+  .container {
+    position: relative;
+    min-height: 100vh;
+    z-index: 3;
+    padding-top: 20vh;
+    padding-bottom: 30vh;
+
+    .event-card {
+      max-width: 28rem;
+    }
+
+    .row > div > h3 {
+      font-size: 2.75rem;
+      font-weight: 500;
+      line-height: 3.4rem;
+      color: $primaryBlack;
+    }
+
+    .row > div > p {
+      font-family: $secondaryFont;
+      font-size: 1.1rem;
+      line-height: 1.5rem;
+      color: $secondaryBlack;
+    }
+
+    .register-column {
+      > h3 {
+        margin-bottom: 1.5rem;
+      }
+
+      &.has-form {
+        > h3 {
+          margin-bottom: 1rem;
+        }
+      }
+
+      &.has-form {
+        > p {
+          margin-bottom: 1.5rem;
+        }
+      }
+
+      &.has-external-link {
+        .btn {
+          margin-top: 2rem;
+        }
+      }
+    }
+  }
+
+  .bg-text {
+    left: 1rem;
+    bottom: -5vh;
+  }
+
+  @include media-breakpoint-down(md) {
+    .container {
+      padding-top: 15vh;
+      padding-bottom: 12vh;
+
+      .event-card {
+        max-width: unset;
+      }
+
+      .register-column {
+        margin-top: 4rem;
+      }
+    }
+
+    .bg-text {
+      display: none;
+    }
+  }
+}
+
+
+
+.register-column {
+  .form-field-container {
+    margin-bottom: 0.3rem;
+    &.is-file-input{
+      margin-bottom: 1.5rem;
+      margin-top: 2rem;
+    }
+    &.checkboxes-container{
+      margin-top: 1.5rem;
+    }
+  }
+}

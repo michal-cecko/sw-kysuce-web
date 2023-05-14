@@ -29,7 +29,7 @@ $args = [
     'meta_query' => array(
         'relation' => 'AND',
         array(
-            'key' => 'is_pinned_at_home',
+            'key' => 'event_is_pinned_at_home',
             'value' => 1,
             'compare' => '=',
         ),
@@ -115,7 +115,7 @@ $pinnedEvent = new WP_Query($args);
                     </div>
                 </a>
                 <?php wp_reset_query(); endif ?>
-            <?php if ($image = get_field("intro_image")) : ?>
+            <?php if ($image = get_field("home_intro_image")) : ?>
                 <div class="image d-lg-block d-none">
                     <img src="<?= $image ?>" alt="Intro obrázok">
                 </div>
@@ -134,8 +134,8 @@ $pinnedEvent = new WP_Query($args);
 <section id="blogSection">
     <div class="container">
         <div class="section-id" id="blog"></div>
-        <h1 class="heading"><?= get_field("blog_heading") ?></h1>
-        <?php if ($sub = get_field("blog_subheading")) : ?>
+        <h1 class="heading"><?= get_field("home_blog_heading") ?></h1>
+        <?php if ($sub = get_field("home_blog_subheading")) : ?>
             <p class="secondary-text mt-3"><?= $sub ?></p>
         <?php endif ?>
         <div class="blog-container row">
@@ -208,7 +208,7 @@ $pinnedEvent = new WP_Query($args);
 <section id="reportsSection">
     <div class="container">
         <div class="section-id" id="reporty_zo_sutazi"></div>
-        <h1 class="heading"><?= get_field("reports_heading") ?></h1>
+        <h1 class="heading"><?= get_field("home_reports_heading") ?></h1>
         <span class="bg-text d-md-block d-none">súťaže</span>
         <?php if ($reports->have_posts()) : ?>
             <div class="reports-container red-scrollbar">

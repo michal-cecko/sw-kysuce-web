@@ -6,7 +6,7 @@ $args = [
     'post_type' => 'event',
     'meta_query' => array(
         array(
-            'key' => 'article_link',
+            'key' => 'event_article_link',
             'compare' => '!=',
             'value' => null
         ),
@@ -36,7 +36,7 @@ $events = new WP_Query($args);
                 <div class="swiper swiper-latest-events">
                     <div class="swiper-wrapper">
                         <?php while ($events->have_posts()) : $events->the_post() ?>
-                            <?php $article = get_field("article_link"); ?>
+                            <?php $article = get_field("event_article_link"); ?>
                             <div class="swiper-slide">
                                 <a href="<?= get_the_permalink($article) ?>" class="card event-card flex-column">
                                     <div class="img-container">

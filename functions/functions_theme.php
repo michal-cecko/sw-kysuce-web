@@ -166,7 +166,6 @@ function enqueue_custom_scripts_links(): void
         wp_enqueue_style('slick-theme-css', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css');
         wp_enqueue_style('slick-css', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css');
         wp_enqueue_script('slick-js', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js', ['jquery']);
-
     }
 
 
@@ -187,6 +186,7 @@ function enqueue_custom_scripts_links(): void
 
     enqueue_component("commons", $defaultPHPVars);
     enqueue_component("header");
+    enqueue_component("forms");
 
     if ($currentPageSlug == "blog") {
         enqueue_component("blog");
@@ -196,6 +196,9 @@ function enqueue_custom_scripts_links(): void
         enqueue_component("events");
     }
 
+    if ( is_singular() && is_page_template( 'single-event.php' ) ) {
+        enqueue_component("event");
+    }
 
     //STYLES
 
@@ -227,6 +230,10 @@ function admin_enqueue_scripts()
 
     if( in_array('usporiadatel', $user->roles) ){
         wp_enqueue_style('usporiadatel-css', get_template_directory_uri() . '/dist/css/admin/usporiadatel.css', FALSE, time());
+    }
+
+    if( in_array('author', $user->roles) ){
+        wp_enqueue_style('author-css', get_template_directory_uri() . '/dist/css/admin/author.css', FALSE, time());
     }
 
     wp_register_script(

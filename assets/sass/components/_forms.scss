@@ -1,0 +1,293 @@
+$borderAndLabelColor: #838286;
+
+.form-field-container {
+  position: relative;
+
+  input,
+  .selected-values,
+  textarea {
+    z-index: 1;
+    border: 0;
+    padding-top: 0.7rem;
+    background: transparent;
+    border-bottom: 1px solid $borderAndLabelColor;
+    height: 3.4rem;
+    font-size: 1.15rem;
+    width: 100%;
+    color: $primaryBlack;
+    transition: all 0.3s ease;
+    caret-color: $primaryRed;
+    cursor: pointer;
+
+    &::placeholder {
+      opacity: 0;
+    }
+  }
+
+  textarea {
+    resize: none;
+    max-height: 15rem;
+    line-height: 180%;
+    transition: all 0.3s ease, height 0s;
+    min-height: 54px;
+  }
+
+  &:not(.checkboxes-container) {
+    > label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      position: absolute;
+      left: 0;
+      top: 1.3rem;
+      font-size: 1.15rem;
+      color: $borderAndLabelColor;
+
+      .arrow {
+        margin-left: 0.5rem;
+        transition: all 0.3s ease;
+
+        path {
+          stroke: $borderAndLabelColor;
+        }
+      }
+    }
+  }
+
+  &.focused,
+  &.filled {
+    > label {
+      font-size: 0.75rem;
+      top: 0;
+
+      .arrow {
+        opacity: 0;
+      }
+    }
+
+    input,
+    .selected-values,
+    textarea {
+      border-bottom: 1px solid $primaryBlack;
+    }
+  }
+
+  &.custom-select {
+    &:not(.is-multiple) {
+      .selected-values {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        color: $primaryBlack;
+      }
+    }
+
+    &.is-multiple {
+      .selected-values {
+        min-height: 54px;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        column-gap: 0.5rem;
+        row-gap: 0.5rem;
+      }
+    }
+
+    .options {
+      display: block;
+      z-index: 2;
+      position: absolute;
+      left: 0;
+      width: 100%;
+      overflow-y: hidden;
+      overflow-x: hidden;
+      opacity: 0;
+      transition: all 0.3s ease;
+      max-height: 0;
+
+      .option,
+      .empty{
+        cursor: pointer;
+        padding: 0.7rem 1rem;
+        background: rgba(#BAD6E0, 0.95);
+        display: flex;
+        align-items: center;
+
+        &:nth-child(odd) {
+          background: rgba(#c7dee7, 0.95);
+        }
+
+        &.selected {
+          &::before {
+            width: 0.5rem;
+            height: 0.5rem;
+            content: "";
+            display: block;
+            background: $primaryRed;
+            margin-right: 0.7rem;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+
+    &.opened {
+      .options {
+        overflow-y: auto;
+        max-height: 20rem;
+        opacity: 1;
+      }
+    }
+  }
+
+  &.checkboxes-container {
+    height: fit-content;
+    min-height: 54px;
+    > label{
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      font-size: 1.15rem;
+      color: $borderAndLabelColor;
+      margin-bottom: 0.5rem;
+    }
+    .checkboxes{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.5rem;
+
+      .checkbox-container{
+        display: flex;
+        align-items: center;
+        input{
+          width: 0;
+          position: absolute;
+          visibility: hidden;
+        }
+        label{
+          cursor: pointer;
+          display: block;
+          border: 2px solid $secondaryBlack;
+          background: transparent;
+          width: 1.2rem;
+          height: 1.2rem;
+          border-radius: 4px;
+          &::after{
+            content: "";
+            display: block;
+            background-image: url("../../assets/icons/icon-check.svg");
+            width: 1.2rem;
+            height: 1.2rem;
+            background-size: 0.8rem 0.8rem;
+            background-position: 0.09rem 0.1rem;
+            background-repeat: no-repeat;
+            opacity: 0;
+          }
+        }
+        p{
+          margin-left: 0.5rem;
+        }
+        input:checked + label {
+          border-color: $primaryBlack;
+          background: $primaryBlack;
+          &::after{
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  &.is-file-input {
+    min-height: 11.5625rem;
+    padding: 2rem;
+    cursor: pointer;
+    //https://kovart.github.io/dashed-border-generator/
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23838286' stroke-width='3' stroke-dasharray='15%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+    width: 100%;
+
+    input{
+      width: 0;
+      position: absolute;
+    }
+
+    .choose-file-btn {
+      cursor: pointer;
+    }
+
+    .drop-here-text{
+      width: 100%;
+      height: calc(11.5625rem - 4rem);
+      display: block;
+      background-image: url("../../assets/images/drop_here.svg");
+      background-size: 100%;
+      background-position: center;
+    }
+
+    .drag-drop-text{
+
+      *:not(h6){
+        font-family: $secondaryFont;
+      }
+
+      .upload-icon-text {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        h6 {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          font-weight: 500;
+          margin-bottom: 0.3rem;
+        }
+        p{
+          text-align: center;
+          font-weight: 300;
+          color: $secondaryBlack;
+          span{
+            font-weight: 300;
+            color: $secondaryBlack;
+          }
+        }
+        .icon-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 1rem;
+          background: $primaryRed;
+          width: 3.5rem;
+          height: 3.5rem;
+          border-radius: 50%;
+
+          svg {
+            height: 1.21875rem;
+            width: auto;
+          }
+        }
+      }
+      .text{
+        color: $secondaryBlack;
+        text-align: center;
+        font-weight: 300;
+        span{
+          font-weight: 600;
+          color: $primaryBlack;
+        }
+        .uploaded-file-name{
+          font-weight: 600;
+          color: $primaryBlack;
+        }
+      }
+    }
+  }
+}

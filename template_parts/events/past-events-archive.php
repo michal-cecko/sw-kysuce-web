@@ -27,11 +27,11 @@
                             <div class="icon">
                                 <?= svgIcon(icon_path(false) . "/icon-location.svg") ?>
                             </div>
-                            <p><?= get_field("place_name") ?></p>
+                            <p><?= get_field("event_place") ?></p>
                         </div>
                     </td>
                     <td>
-                        <?php if ($pinnedArticle = get_field("article_link")) : ?>
+                        <?php if ($pinnedArticle = get_field("event_article_link")) : ?>
                             <a class="link-button" href="<?= get_the_permalink($pinnedArticle->ID) ?>">
                                 <?= svgIcon(icon_path(false) . "/icon-arrow_side_top.svg") ?>
                             </a>

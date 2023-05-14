@@ -7,7 +7,7 @@
 <div class="author-container">
     <div class="name"><?= $name ?></div>
     <div class="description"><?= $desc ?></div>
-    <div class="image"><?= get_field("author_image", $authorID) ?></div>
+    <div class="image"><?= get_field("profile_picture", $authorID) ?></div>
     <a href="<?= get_site_url() ?>/blog?author=<?= $nick ?>" class="learn-more-btn">
         <?= __("Všetky články od autora", "swslovakia") ?>
         <span class="icon">

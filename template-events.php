@@ -107,7 +107,7 @@ $upcomingEvents = new WP_Query($args);
         // Extract the years from the 'date_start' field
         $years = [];
         foreach ($post_ids as $post_id) {
-            $date_start = get_field('date_start', $post_id);
+            $date_start = get_field('event_start', $post_id);
             $year = date('Y', strtotime($date_start));
             if (!in_array($year, $years)) {
                 $years[] = $year;

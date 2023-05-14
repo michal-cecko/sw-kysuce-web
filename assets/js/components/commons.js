@@ -50,4 +50,50 @@ export default class Commons {
             body: body,
         });
     }
+
+    addClickOutsideListener(element, callback) {
+        document.addEventListener('mousedown', function(event) {
+            if (!element.contains(event.target)) {
+                const clickOutsideEvent = new CustomEvent('click-outside');
+                element.dispatchEvent(clickOutsideEvent);
+            }
+        });
+
+        element.addEventListener('click-outside', callback);
+    }
+
+    checkFile(file, allowedFileTypes = []) {
+        let fileName = file.name;
+        let allow = 0;
+
+        //check extension
+        if(allowedFileTypes.length) {
+            allow = true
+        } else {
+            allowedFileTypes.forEach((ext) => {
+                if (fileName.endsWith(ext.toLowerCase())) allow = true;
+            })
+        }
+
+        //check max filesize
+        const maxFileSize = 1 * 1024 * 1024; // 1 MB in bytes
+        if (file && file.size > maxFileSize) {
+            allow = 1;
+        }
+
+        return allow;
+    }
+
+    checkCaptcha() {
+        let _this = this
+        return new Promise(function (resolve, reject) {
+            grecaptcha.ready(function () {
+                grecaptcha.execute("***REMOVED***", {action: 'submit'}).then(function (token) {
+                    resolve(token);
+                }).catch(function (error) {
+                    reject(error)
+                });
+            });
+        });
+    }
 }

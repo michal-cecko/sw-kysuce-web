@@ -67,3 +67,5 @@
 </header>
 
 
+
+<div id="notifications"></div>
