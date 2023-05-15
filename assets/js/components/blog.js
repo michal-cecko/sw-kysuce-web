@@ -35,9 +35,10 @@ class Blog extends Commons {
                 await this.fetchContent(-1)
 
                 let _this = this;
+
                 this.$nextTick(() => {
                     let el = this.$el.querySelector('.pagination');
-                    el.addEventListener('page-change', function (event) {
+                    el?.addEventListener('page-change', function (event) {
                         _this.changePage(event.detail.page);
                     });
                 });

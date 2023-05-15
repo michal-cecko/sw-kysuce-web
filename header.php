@@ -29,7 +29,7 @@
                         <?= svgIcon(icon_path(false) . "icon-calendar.svg") ?>
                         <span class="text"><?= __("Kalendár podujatí", "swslovakia") ?></span>
                     </a>
-                    <a href="<?= get_site_url() ?>/kontakt" class="contact-button  d-md-none d-flex justify-content-center align-items-center">
+                    <a href="<?= get_site_url() ?>" class="contact-button  d-md-none d-flex justify-content-center align-items-center">
                         <lord-icon
                                 src="<?= icon_path() ?>/icon-phone-animated.json"
                                 trigger="loop-on-hover"
@@ -53,7 +53,7 @@
                 <span class="text d-lg-block d-none"><?= __("Kalendár podujatí", "swslovakia") ?></span>
                 <span class="text d-lg-none d-block"><?= __("Podujatia", "swslovakia") ?></span>
             </a>
-            <a href="<?= get_site_url() ?>/kontakt" class="contact-button ml-auto ml-md-0 d-md-flex d-none justify-content-center align-items-center">
+            <a href="<?= get_site_url() ?>" class="contact-button ml-auto ml-md-0 d-md-flex d-none justify-content-center align-items-center">
                 <lord-icon
                         src="<?= icon_path() ?>/icon-phone-animated.json"
                         trigger="loop-on-hover"

@@ -64,7 +64,7 @@ $category = getPostCategory(get_the_ID());
             <div class="content-container">
                 <?php the_content(); ?>
             </div>
-            <?php get_template_part("template_parts/author_card", ['author' => get_the_author_meta("ID")]) ?>
+            <?php //get_template_part("template_parts/author_card", ['author' => get_the_author_meta("ID")]) ?>
         </div>
     </div>
 </section>

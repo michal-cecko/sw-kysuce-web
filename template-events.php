@@ -9,7 +9,7 @@ $args = [
     'meta_query' => [
         'relation' => "AND",
         [
-            'key' => 'date_start',
+            'key' => 'event_start',
             'value' => date('Y-m-d'),
             'compare' => '>=',
             'type' => 'DATE'
@@ -91,12 +91,12 @@ $upcomingEvents = new WP_Query($args);
             'post_type' => 'event',
             'posts_per_page' => -1,
             'fields' => 'ids',
-            'meta_key' => 'date_start',
+            'meta_key' => 'event_start',
             'orderby' => 'meta_value',
             'order' => 'DESC',
             'meta_query' => [
                 [
-                    'key' => 'date_start',
+                    'key' => 'event_start',
                     'compare' => 'EXISTS',
                 ],
             ],
@@ -104,7 +104,7 @@ $upcomingEvents = new WP_Query($args);
 
         $post_ids = get_posts($args);
 
-        // Extract the years from the 'date_start' field
+        // Extract the years from the 'event_start' field
         $years = [];
         foreach ($post_ids as $post_id) {
             $date_start = get_field('event_start', $post_id);
@@ -117,10 +117,11 @@ $upcomingEvents = new WP_Query($args);
         rsort($years);
         ?>
 
+        <div class="d-none" id="pastEventsData" data-years="<?= implode(",", $years) ?>"></div>
+
         <!--   PAST EVENTS ----- START    -->
         <?php if (!empty($post_ids)) : ?>
             <section id="pastEvents">
-                <div class="d-none" id="pastEventsData" data-years="<?= implode(",", $years) ?>"></div>
                 <div class="section-id" id="minule-podujatia"></div>
                 <div class="container">
                     <div class="heading-container d-flex justify-content-between align-items-center flex-wrap">

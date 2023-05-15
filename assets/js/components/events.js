@@ -22,7 +22,7 @@ class Events extends Commons {
                 years: [],
             },
             created() {
-                this.years = document.getElementById("pastEventsData").dataset.years.split(",")
+                this.years = document.getElementById("pastEventsData")?.dataset?.years.split(",")
                 console.log("Events component created.")
             },
             async mounted() {

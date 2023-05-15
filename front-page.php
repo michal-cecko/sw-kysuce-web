@@ -10,7 +10,7 @@ $args = [
     'posts_per_page' => 4,
     'post_status' => 'publish',
     'post_type' => 'post',
-    'category__in' => [4], // ID kategórie "Súťaže"
+    'cat' => 4, // ID kategórie "Súťaže"
 ];
 $reports = new WP_Query($args);
 

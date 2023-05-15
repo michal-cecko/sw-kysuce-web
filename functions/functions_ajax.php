@@ -75,13 +75,13 @@ function sw_get_events_by_year()
         'meta_query' => [
             "relation" => "AND",
             [
-                'key' => 'date_start',
+                'key' => 'event_start',
                 'value' => [$year . '-01-01', $year . '-12-31'],
                 'compare' => 'BETWEEN',
                 'type' => 'DATE',
             ],
             [
-                'key' => 'date_start',
+                'key' => 'event_start',
                 'value' => date('Y-m-d'),
                 'compare' => '<',
                 'type' => 'DATE'
