@@ -1,4 +1,4 @@
-import Commons from "./components/commons";
+import Commons from "./components/commons.js";
 
 class Admin extends Commons {
     constructor() {
@@ -6,26 +6,27 @@ class Admin extends Commons {
         console.log("Admin JS has been loaded.")
         //Functions
         this._prepareSubmittedFormRemoval()
+        this._prepareExportBtn()
     }
 
-    // Submitted form delete ---- START
-
-    async _prepareSubmittedFormRemoval() {
+    _prepareSubmittedFormRemoval() {
         let __this = this
+
 
         let deleteIcons = document.querySelectorAll('.remove-submitted-row')
         if (deleteIcons.length) {
             deleteIcons.forEach(icon => {
                 icon.addEventListener("click", () => {
                     let id = icon.dataset.id
-                    if (!id) return
+                    let formID = icon.dataset.form_id
+                    if (!id || !formID) return
 
-                    deleteForm(id);
+                    deleteForm(id, formID);
                 })
             })
         }
 
-        async function deleteForm(id) {
+        async function deleteForm(id, formID) {
 
             console.log(__this.ajaxURL)
 
@@ -34,6 +35,7 @@ class Admin extends Commons {
             //Data
             let data = new FormData();
             data.append("id", id)
+            data.append("form_id", formID)
             data.append("action", "delete_form")
             data.append("nonce", __this.nonce)
 
@@ -56,7 +58,22 @@ class Admin extends Commons {
         }
     }
 
-    // Submitted form delete ---- END
+    _prepareExportBtn() {
+        let _this = this;
+        let params = this.getCurrentURLParams();
+        console.log(params);
+        this.waitForElementToDisplay("#sw-submitted_forms", function () {
+            let btn = document.createElement('a');
+            btn.href = _this.ajaxURL + "?action=export_submissions&form_id=" + params['post'];
+            btn.target = "_blank";
+            btn.classList.add("button", "button-primary", "button-large")
+            btn.style.marginRight = "8px"
+            btn.innerHTML = 'Export';
+
+            document.querySelector("#sw-submitted_forms .postbox-header").appendChild(btn);
+        }, 9000, 10)
+    }
+
 }
 
 new Admin

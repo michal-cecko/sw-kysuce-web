@@ -315,7 +315,7 @@ header {
     transform: translateX(1rem);
     transition: 0.5s ease all;
     opacity: 0;
-    max-width: 90vw;
+    max-width: 300px;
 
     &:last-child{
       margin-bottom: 0;
@@ -332,11 +332,12 @@ header {
     }
   }
 
-  @include respond-below(md) {
+  @include media-breakpoint-down(md) {
     right: 1rem;
     .notification {
       padding: 0.5rem 1rem;
       margin-bottom: 0.65rem;
+      max-width: 90vw;
     }
   }
 }

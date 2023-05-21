@@ -153,6 +153,8 @@ function enqueue_custom_scripts_links(): void
     //JS + TS + VUE
 
     //DEFAULTS
+    $recaptchaSiteKey = "***REMOVED***";
+    wp_enqueue_script('recaptcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $recaptchaSiteKey);
     wp_enqueue_script('vue-js', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js');
     wp_enqueue_script('axios-js', 'https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.4/axios.min.js', 'vue-js');
     wp_enqueue_script('swiper-js', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.0.5/swiper-bundle.min.js');
@@ -186,7 +188,6 @@ function enqueue_custom_scripts_links(): void
 
     enqueue_component("commons", $defaultPHPVars);
     enqueue_component("header");
-    enqueue_component("forms");
 
     if ($currentPageSlug == "blog") {
         enqueue_component("blog");
@@ -196,7 +197,7 @@ function enqueue_custom_scripts_links(): void
         enqueue_component("events");
     }
 
-    if ( is_singular() && is_page_template( 'single-event.php' ) ) {
+    if ( is_singular("event") ) {
         enqueue_component("event");
     }
 
@@ -225,7 +226,7 @@ function admin_enqueue_scripts()
         'nonce' => wp_create_nonce('ajax-nonce')
     ];
 
-    wp_register_style('admin-css', get_template_directory_uri() . '/dist/css/admin.css', FALSE, time());
+    wp_register_style('admin-css', get_template_directory_uri() . '/dist/css/admin/admin.css', FALSE, time());
     wp_enqueue_style('admin-css');
 
     if( in_array('usporiadatel', $user->roles) ){

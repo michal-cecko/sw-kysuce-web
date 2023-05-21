@@ -262,3 +262,31 @@ function checkCaptcha($responseToken)
     // Check if the response was successful and the score is high enough
     return $decodedResponse->success && $decodedResponse->score >= 0.5;
 }
+
+
+function validation( $data )
+{
+    $data = trim( $data );
+    $data = stripslashes( $data );
+    $data = htmlspecialchars( $data );
+    return $data;
+}
+
+
+
+function remove_directory($directory)
+{
+    if (!empty($directory) && is_dir($directory)) {
+        $files = glob($directory . '/*');
+        foreach ($files as $file) {
+            if (is_file($file)) {
+                unlink($file); // Remove individual files
+            } elseif (is_dir($file)) {
+                remove_directory($file); // Recursively remove subdirectories
+            }
+        }
+        rmdir($directory); // Remove the empty directory
+        return true;
+    }
+    return false;
+}

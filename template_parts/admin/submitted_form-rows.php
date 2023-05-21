@@ -1,17 +1,25 @@
+<?php
+$form = $args['form'] ?? false;
+?>
 <div class="submitted-forms">
     <?php if (!empty($args['rows'])) : $rows = $args['rows']; ?>
-        <?php foreach ($rows as $row) : var_dump($row); ?>
+        <?php foreach ($rows as $row) : ?>
             <div class="row">
                 <div class="fields">
-                    <?php foreach ($fields as $field) : var_dump($field); ?>
+                    <?php foreach ($row as $fieldsName => $fieldValue) : ?>
                     <div class="field">
-                        <div class="name">Meno a priezvisko</div>
-                        <div class="value">Fero Trnka</div>
+                        <div class="name"><?= $fieldsName ?></div>
+                        <?php if (str_starts_with($fieldValue, "http")) : ?>
+                            <a href="<?= $fieldValue ?>" target="_blank" class="value">Otvoriť súbor</a>
+                        <?php else : ?>
+                            <div class="value"><?= $fieldValue ?></div>
+                        <?php endif ?>
+
                     </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
                 </div>
                 <div class="actions">
-                    <span class="dashicons dashicons-trash remove-submitted-row" data-id="<?= $row ?>"></span>
+                    <span class="dashicons dashicons-trash remove-submitted-row" data-id="<?= $row['id'] ?>" data-form_id="<?= $form->ID ?>"></span>
                 </div>
             </div>
         <?php endforeach ?>
