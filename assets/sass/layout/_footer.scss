@@ -1,3 +1,9 @@
+.hidden-footer{
+  footer{
+    display: none !important;
+  }
+}
+
 footer {
   padding: 7rem 0 4rem 0;
   .logo-container {
@@ -6,25 +12,6 @@ footer {
       width: 100%;
       height: auto;
       margin-bottom: 2.5rem;
-    }
-
-    .contact-info {
-      font-family: $secondaryFont;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 24px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      color: $primaryBlack;
-
-      svg {
-        margin-right: 0.4rem;
-      }
-
-      &:last-child {
-        margin-bottom: 0;
-      }
     }
   }
 
@@ -73,18 +60,6 @@ footer {
     .secondary-text {
       margin-bottom: 1.5rem;
     }
-
-    .social{
-      text-decoration: none;
-      background: $primaryBlack;
-      border-radius: 50%;
-      width: 56px;
-      height: 56px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
   }
 
 
@@ -111,5 +86,43 @@ footer {
     .newsletter-container {
       margin-bottom: 1rem;
     }
+  }
+}
+
+.socials{
+  .social{
+    text-decoration: none;
+    background: $primaryBlack;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &.socials-red{
+    .social{
+      background: $primaryRed;
+    }
+  }
+}
+
+
+.contact-info {
+  font-family: $secondaryFont;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  color: $primaryBlack;
+
+  svg {
+    margin-right: 0.4rem;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
   }
 }

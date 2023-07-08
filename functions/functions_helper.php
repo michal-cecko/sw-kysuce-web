@@ -120,6 +120,11 @@ function printMenu($location)
 }
 
 
+function get_id_by_slug($page_slug) {
+    return get_page_by_path($page_slug)?->ID;
+}
+
+
 function getPostCategory($post)
 {
     $category = get_the_category($post)[0] ?? false;
@@ -203,6 +208,36 @@ function getMonthName($month)
             return "November";
         case 12:
             return "December";
+    }
+}
+
+function getShortMonth($month)
+{
+    switch ($month) {
+        case 1:
+            return "Jan";
+        case 2:
+            return "Feb";
+        case 3:
+            return "Mar";
+        case 4:
+            return "Apr";
+        case 5:
+            return "Máj";
+        case 6:
+            return "Jún";
+        case 7:
+            return "Júl";
+        case 8:
+            return "Aug";
+        case 9:
+            return "Sep";
+        case 10:
+            return "Okt";
+        case 11:
+            return "Nov";
+        case 12:
+            return "Dec";
     }
 }
 

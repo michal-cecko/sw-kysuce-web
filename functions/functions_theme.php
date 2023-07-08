@@ -153,8 +153,6 @@ function enqueue_custom_scripts_links(): void
     //JS + TS + VUE
 
     //DEFAULTS
-    $recaptchaSiteKey = "***REMOVED***";
-    wp_enqueue_script('recaptcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $recaptchaSiteKey);
     wp_enqueue_script('vue-js', 'https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js');
     wp_enqueue_script('axios-js', 'https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.4/axios.min.js', 'vue-js');
     wp_enqueue_script('swiper-js', 'https://cdnjs.cloudflare.com/ajax/libs/Swiper/9.0.5/swiper-bundle.min.js');
@@ -193,12 +191,21 @@ function enqueue_custom_scripts_links(): void
         enqueue_component("blog");
     }
 
+    if ($currentPageSlug == "kontakt") {
+        enqueue_component("contact");
+    }
+
     if ($currentPageSlug == "podujatia-a-sutaze") {
         enqueue_component("events");
     }
 
     if ( is_singular("event") ) {
         enqueue_component("event");
+    }
+
+    if(is_singular('event') || $currentPageSlug == "kontakt") {
+        $recaptchaSiteKey = "***REMOVED***";
+        wp_enqueue_script('recaptcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $recaptchaSiteKey);
     }
 
     //STYLES

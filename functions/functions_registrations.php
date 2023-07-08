@@ -106,9 +106,9 @@ function sw_submit_register_form()
         wp_send_json_error("Tento event už začal a nieje možné sa naň zaregistrovať. (#2)");
     }
 
-   /* if (!checkCaptcha($captcha)) {
+    if (!checkCaptcha($captcha)) {
         wp_send_json_error("Myslíme si, že ste robot. (#2)");
-    }*/
+    }
 
     $fieldsSanitized = [];
     $checkUniqueEmail = false;

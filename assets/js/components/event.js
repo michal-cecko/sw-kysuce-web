@@ -1,9 +1,12 @@
 import Commons from "./commons.js"
+import Forms from "./forms.js"
 
 class Event extends Commons {
 
     constructor() {
         super();
+
+        this.forms = new Forms();
         this.init();
     }
 
@@ -25,7 +28,7 @@ class Event extends Commons {
             },
             mounted() {
                 this.eventData = document.querySelector("#eventData")?.dataset
-                _thisClass._prepareFormFields()
+                _thisClass.forms._prepareFormFields()
             },
             methods: {
                 async send() {
@@ -34,41 +37,25 @@ class Event extends Commons {
                     let _this = this
 
                     let fields = document.querySelectorAll(".form-field")
-                    fields.forEach(field => {
-                        let container = field.closest(".form-field-container")
-                        let fieldName = container.dataset.name
-                        let isRequired = container.classList.contains("required");
-                        let isFile = container.classList.contains("is-file-input");
+                    let validator = _thisClass.forms.validateFormFields(fields);
+                    this.errors = validator.errors;
+                    this.fields = this.overwriteProps(validator.fields);
 
-                        if(!isFile && isRequired && _thisClass.empty(field.value)) {
-                            this.errors[field.id] = "Pole " + fieldName + " musíte vyplniť."
-                        } else if(field.type === "email" && !_thisClass.validateEmail(field.value)) {
-                            this.errors[field.id] = "Pole " + fieldName + " musí mať správny tvar emailu."
-                        } else if(isFile) {
-                            if(field.files.length) {
-                                this.fields[field.id] = field.files[0]
-                            } else if(isRequired) {
-                                this.errors[field.id] = "Nahrajte prosím súbor do poľa " + fieldName + "."
-                            }
-                        }
-                    })
-
-                    await _thisClass.checkCaptcha().then(function (token) {
+                    await _thisClass.forms.checkCaptcha().then(function (token) {
                         _this.recaptchaResponse = token
-                        console.log(_this.recaptchaResponse)
                     }).catch(function (error) {
                         _this.errors.recaptcha = error
                         console.log(error)
                     });
 
                     if(!_thisClass.empty(this.errors)) {
-                        _thisClass.outputErrors(this.errors)
+                        _thisClass.forms.outputErrors(this.errors)
                         return false;
                     }
 
                     this.sending = true;
 
-                    let data = _thisClass.objectToFormData({
+                    let data = _thisClass.forms.objectToFormData({
                         fields: this.fields,
                         action: "submit_register_form",
                         form_id: this.eventData.form_id,
@@ -77,17 +64,17 @@ class Event extends Commons {
                     })
 
                     try {
-                        let response = await _thisClass.WPPostAjax(data);
+                        let response = await _thisClass.forms.WPPostAjax(data);
                         response = await response.json();
 
                         if (!response.success) {
                             this.errors.general = response.data
-                            _thisClass.outputErrors(this.errors)
+                            _thisClass.forms.outputErrors(this.errors)
                             return false;
                         }
 
                         this.fields = {}
-                        _thisClass.resetForm(document.querySelector(".form-container"))
+                        _thisClass.forms.resetForm(document.querySelector(".form-container"))
                         _thisClass.notify(response.data, "success")
 
                     } catch (error) {

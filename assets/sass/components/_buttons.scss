@@ -1,7 +1,6 @@
-
 // LEARN MORE BTN --- START
 
-.learn-more-btn{
+.learn-more-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,7 +12,7 @@
   width: fit-content;
   line-height: 150%;
 
-  .icon{
+  .icon {
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
@@ -24,14 +23,14 @@
     margin-left: 0.75rem;
   }
 
-  &.down{
-    .icon{
+  &.down {
+    .icon {
       transform: rotate(90deg);
     }
   }
 
-  &.bigger{
-    .icon{
+  &.bigger {
+    .icon {
       width: 4rem;
       height: 4rem;
     }
@@ -41,14 +40,11 @@
 // LEARN MORE BTN --- END
 
 
-
-
 // BUTTONS --- START
 
 .btn {
   text-decoration: none;
   border-radius: 3rem;
-  padding: 1rem 2rem;
   cursor: pointer;
   border: 0;
   outline: 0;
@@ -65,14 +61,30 @@
   &.btn--medium {
     font-size: 1.125rem;
     line-height: 1.6875rem;
+    padding: 1rem 2rem;
   }
 
-   &.btn--red {
-     background: $primaryRed;
-     span{
-       color: $primaryWhite;
-     }
-   }
+  &.btn--small {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.92rem;
+    line-height: 1.35rem;
+  }
+
+  &.btn--red {
+    background: $primaryRed;
+
+    span {
+      color: $primaryWhite;
+    }
+  }
+
+  &.btn--white {
+    background: $primaryWhite;
+
+    span {
+      color: $primaryBlack;
+    }
+  }
 }
 
 // BUTTONS --- END

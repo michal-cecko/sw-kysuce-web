@@ -95,14 +95,14 @@ $pinnedEvent = new WP_Query($args);
         </div>
         <div class="lower-half">
             <span class="bg-text">workout</span>
-            <?php if ($pinnedEvent->have_posts()) : $pinnedEvent->the_post(); ?>
+            <?php if ($pinnedEvent->have_posts()) : $pinnedEvent->the_post(); $start = strtotime(get_field("event_start")); ?>
                 <a href="<?= get_the_permalink() ?>" class="pinned-event">
                     <div class="date">
                         <div class="day">
-                            <div class="day-before"><?= date("d", strtotime("-1 day", strtotime(get_the_date("Y-m-d")))) ?></div>
-                            <div class="day-current"><?= get_the_date("d") ?></div>
+                            <div class="day-before"><?= date("d", strtotime("-1 day", $start)) ?></div>
+                            <div class="day-current"><?= date("d", $start) ?></div>
                         </div>
-                        <div class="month"><?= ucfirst(get_the_date("M")) ?></div>
+                        <div class="month"><?= ucfirst(getShortMonth(date("n", $start))) ?></div>
                     </div>
                     <div class="text">
                         <div class="title"><?= get_the_title() ?></div>

@@ -1,0 +1,111 @@
+// CONTACT INTRO ---- START
+
+#contact {
+  .container {
+    height: 100vh;
+    position: relative;
+    z-index: 2;
+    > .row{
+      height: 100%;
+    }
+  }
+  .form-wrapper{
+    margin-top: 12rem;
+    padding-right: 10rem;
+    h1{
+      font-family: $primaryFont;
+      font-size: 4rem;
+      font-weight: 500;
+      line-height: 1.115;
+    }
+    .btns{
+      margin: 2.5rem 0;
+    }
+    .form-container{
+      align-items: flex-start;
+    }
+    .form-field-container{
+      margin-bottom: 1rem;
+    }
+  }
+
+
+
+  .img-container{
+    position: fixed;
+    z-index: 1;
+    right: 0;
+    top: 0;
+    width: 42vw;
+    height: 100vh;
+    img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .contact-info-wrapper{
+    position: relative;
+    padding-block: 5vw;
+    *{
+      color: $primaryWhite !important;
+    }
+    svg{
+      path{
+        stroke: $primaryWhite !important;
+      }
+    }
+    h3{
+      font-size: 2rem;
+      font-weight: 500;
+      line-height: 1.25;
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    .container{
+      height: fit-content;
+      padding-bottom: 5rem;
+    }
+    .form-wrapper{
+      margin-top: 12rem;
+      padding-right: 15px;
+      h1{
+        text-align: center;
+        width: 100%;
+        font-size: 3rem;
+      }
+      .btns{
+        margin: 2.5rem 0;
+      }
+      .form-container{
+        align-items: flex-start;
+      }
+    }
+
+    .img-container{
+      all: unset;
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 50vh;
+      margin-bottom: 5rem;
+      img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    .contact-info-wrapper{
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      padding-block: 5vw;
+      padding-inline: 16px;
+    }
+  }
+}
+
+// CONTACT INTRO ---- END
