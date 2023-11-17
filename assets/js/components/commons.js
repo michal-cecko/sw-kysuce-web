@@ -49,6 +49,7 @@ export default class Commons {
     }
 
     overwriteProps(objectSource, objectTarget) {
+        console.log(objectTarget)
         for (let prop in objectSource) {
             if(objectSource.hasOwnProperty(prop)) {
                 objectTarget[prop] = objectSource[prop]

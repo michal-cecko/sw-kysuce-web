@@ -7,15 +7,18 @@ add_action('wp_ajax_nopriv_get_posts', 'sw_get_posts');
 
 function sw_get_posts()
 {
-    $stickyPosts = get_option('sticky_posts');
+    $postType = ($_GET['post_type'] ?? "") === "post" ? "post" : 'playground';
 
     $args = [
-        'post_type' => 'post',
+        'post_type' => $postType,
         'post_status' => 'publish',
         'orderby' => 'date',
-        'post__not_in' => $stickyPosts,
         'order' => 'DESC',
     ];
+
+    if($postType === 'post') {
+        $args['post__not_in'] = get_option('sticky_posts');
+    }
 
     //Fetch main from category
     $postsPerPage = $_GET['posts_per_page'] ?? -1;
@@ -37,7 +40,11 @@ function sw_get_posts()
     $final = [];
 
     $final['pagination']['total_pages'] = $posts->max_num_pages;
-    $final['content'] = get_template_part_as_string("template_parts/blog/blog-archive", ['posts' => $posts]);
+    if($postType === 'post') {
+        $final['content'] = get_template_part_as_string("template_parts/blog/blog-archive", ['posts' => $posts]);
+    } else {
+        $final['content'] = get_template_part_as_string("template_parts/playgrounds/playgrounds-archive", ['posts' => $posts]);
+    }
 
     wp_send_json($final, 200);
 }
@@ -106,7 +113,55 @@ function sw_submit_contact_form()
     if ($type === "contact") {
         send_contact_form($data);
     } else {
-        wp_send_json_error("Funkcionalita ihrísk bude dopracovaná čoskoro.");
+        send_playground_request($data, $_FILES);
+    }
+}
+
+function send_playground_request($data, $images)
+{
+    if(empty($data['lat']) || empty($data['long']) || empty($data['address']) || empty($data['email']) || empty($images['fotky'])){
+        wp_send_json_error("Nevyplnili ste jedno z požadovaných polí.");
+    }
+
+    $post_args = [
+        'post_type' => 'playground',
+        'post_status' => 'pending', // You can change this to 'publish' if you want the post to be published immediately
+        'meta_input' => [
+            'reported_email' => $data['email'],
+            'reported_name' => $data['name'] ?? "",
+        ],
+    ];
+
+    // Create the post
+    $post_id = wp_insert_post($post_args);
+
+    // Check if there are images present
+    if (!empty($images['fotky']['tmp_name']) && is_array($images['fotky']['tmp_name'])) {
+        // Uploading images and getting their attachment IDs
+        $image_ids = array();
+        foreach ($images['fotky']['tmp_name'] as $index => $tmp_name) {
+            $attachment_id = media_handle_upload('fotky', 0); // Upload the image to the media library
+            if (is_wp_error($attachment_id)) {
+                wp_send_json_error("Nastala chyba počas nahrávania obrázka.");
+            } else {
+                $image_ids[] = $attachment_id;
+            }
+        }
+
+        // Update the ACF gallery field "pg-images" with the image IDs
+        update_field('pg-images', $image_ids, $post_id);
+    } else {
+        wp_send_json_error("Nepridali ste žiadne fotky.");
+    }
+
+    // Update the ACF fields "pg-location" and "pg-address"
+    update_field('pg-location', ['lat' => $data['lat'], 'lng' => $data['long']], $post_id);
+    update_field('pg-address', $data['address'], $post_id);
+
+    if ($post_id) {
+        wp_send_json_success("Ihrisko bolo odoslané na schválenie.");
+    } else {
+        wp_send_json_error("Nepodarilo sa odoslať žiadosť na schválenie ihriska. #3");
     }
 }
 

@@ -66,7 +66,10 @@ class Blog extends Commons {
                 async loadPosts(moreParams = {}) {
                     this.loading = true;
 
+                    console.log(this.blogData.post_type)
+
                     let params = {
+                        post_type: this.blogData.post_type,
                         action: "get_posts",
                         nonce: _thisClass.nonce,
                     };

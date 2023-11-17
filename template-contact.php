@@ -47,7 +47,64 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-container" v-show="activeForm === 'playground'" id="playgroundForm"></div>
+                    <div class="form-container" v-show="activeForm === 'playground'" id="playgroundForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-field-container movable-label is-text" data-name="meno">
+                                    <label for="meno">Meno a priezvisko</label>
+                                    <input v-model="playgroundForm.meno" class="form-field" type="text" id="meno">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-field-container movable-label required is-email" data-name="email">
+                                    <label for="email">Email</label>
+                                    <input v-model="playgroundForm.email" class="form-field" type="email" id="email">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-field-container movable-label is-text" data-name="nazov">
+                                    <label for="nazov">Názov ihriska</label>
+                                    <input v-model="playgroundForm.nazov" class="form-field" type="text" id="nazov">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-field-container movable-label required is-textarea is-text" data-name="poloha">
+                                    <label for="poloha">Poloha ihriska</label>
+                                    <textarea v-model="playgroundForm.poloha" class="form-field" id="poloha"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-field-container is-file-input required" onclick="document.getElementById('fotky').click();" data-allowed_types="JPG,JPEG,PNG" data-name="fotky">
+                                    <input type="file" class="form-field" id="fotky" multiple>
+                                    <div class="drop-here-text d-none"></div>
+                                    <div class="drag-drop-text">
+                                        <div class="upload-icon-text">
+                                            <h6>
+                                                <span class="icon-container">
+                                                    <?= svgIcon(icon_path(false) . "icon-upload.svg", ['class' => ['icon']]) ?>
+                                                </span>
+                                                <span class="choose-file-btn text-center">Fotky ihriska</span>
+                                            </h6>
+                                            <p>
+                                                Povolené typy
+                                                <span>(.JPG, .JPEG, .PNG)</span>
+                                            </p>
+                                        </div>
+                                        <div class="text"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="button" @click="sendForm()" class="ml-auto learn-more-btn mt-5">
+                                    <?= __("Nahlásiť ihrisko", "swslovakia") ?>
+                                    <span class="icon">
+                                        <?= svgIcon(icon_path(false) . "icon-arrow_right.svg") ?>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="contact-info-wrapper d-none d-md-flex col-md-4 justify-content-end flex-column">
                     <h3 class="mb-3">Kontakt</h3>

@@ -33,9 +33,6 @@ class Contact extends Commons {
             },
             methods: {
                 toggleActiveForm(form) {
-                    if (form === 'playground') {
-                        _thisClass.notify("Funkciu ihrísk doplníme v blízkej dobe.", "warning")
-                    }
                     this.activeForm = form === 'contact' ? 'contact' : 'playground';
                 },
                 async sendForm() {

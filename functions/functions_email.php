@@ -75,8 +75,7 @@
         return $email;
     }
 
-
-function contact_form()
+    function contact_form()
     {
         if ( isset( $_POST[ 'form_data' ] ) ) {
 

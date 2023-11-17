@@ -39,7 +39,7 @@ class Event extends Commons {
                     let fields = document.querySelectorAll(".form-field")
                     let validator = _thisClass.forms.validateFormFields(fields);
                     this.errors = validator.errors;
-                    this.fields = this.overwriteProps(validator.fields);
+                    this.fields = _thisClass.overwriteProps(validator.fields, this.fields);
 
                     await _thisClass.forms.checkCaptcha().then(function (token) {
                         _this.recaptchaResponse = token

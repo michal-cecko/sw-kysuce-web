@@ -121,7 +121,11 @@ function printMenu($location)
 
 
 function get_id_by_slug($page_slug) {
-    return get_page_by_path($page_slug)?->ID;
+    $page = get_page_by_path($page_slug);
+
+    if(empty($page)) return null;
+
+    return $page->ID;
 }
 
 
@@ -278,6 +282,8 @@ function getEventDate($event)
 
 function checkCaptcha($responseToken)
 {
+    if(LOCALHOST) return true;
+
     $secretKey = '***REMOVED***';
 
     // Send a POST request to the reCAPTCHA verification API

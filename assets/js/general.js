@@ -124,7 +124,11 @@ class General extends Commons{
             console.log(item)
             item.addEventListener('click', (e)=> {
                 let hashval = item.getAttribute('href')
+                if(!hashval.length) return;
+
                 let target = document.querySelector(hashval)
+                if(!target) return;
+
                 target.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'

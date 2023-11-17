@@ -1,7 +1,13 @@
 <?php
-const WP_VERSIONING = false;
+$ip = $_SERVER['REMOTE_ADDR'];
+if ($ip == '127.0.0.1' or $ip == '::1') {
+    define('LOCALHOST', true);
+} else {
+    define('LOCALHOST', false);
+}
+
 $version = wp_get_theme()->parent()->Version ?? "1.0.0";
-DEFINE("VERSION", !WP_VERSIONING ? time() : $version);
+DEFINE("VERSION", LOCALHOST ? time() : $version);
 
 // THEME SETUP
 
@@ -162,6 +168,9 @@ function enqueue_custom_scripts_links(): void
     wp_enqueue_script('fslightbox-js', 'https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.0.9/index.min.js');
     wp_enqueue_script('lazyload-js', get_template_directory_uri() . '/assets/js/libs/lazyload.min.js');
 
+    $api_key = 'YOUR_GOOGLE_MAPS_API_KEY';
+    wp_enqueue_script('google-maps', 'https://maps.googleapis.com/maps/api/js?key=' . $api_key, array(), null, true);
+
     if(is_page_template("template-blog.php")) {
         wp_enqueue_style('slick-theme-css', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css');
         wp_enqueue_style('slick-css', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css');
@@ -187,7 +196,7 @@ function enqueue_custom_scripts_links(): void
     enqueue_component("commons", $defaultPHPVars);
     enqueue_component("header");
 
-    if ($currentPageSlug == "blog") {
+    if (in_array($currentPageSlug, ['blog', 'ihriska'])) {
         enqueue_component("blog");
     }
 
@@ -213,7 +222,7 @@ function enqueue_custom_scripts_links(): void
     //Remove global inline styles
     wp_dequeue_style('global-styles');
 
-    if (!WP_VERSIONING) {
+    if (LOCALHOST) {
         $mainCSSPath = get_template_directory_uri() . '/dist/css/main.css';
     } else {
         $mainCSSPath = get_template_directory_uri() . '/dist/css/main.min.css';

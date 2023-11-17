@@ -98,7 +98,8 @@ function sw_submit_register_form()
     $captcha = $_POST['recaptcha'];
     $fields = $_POST['fields'];
 
-    if (get_field("event_register_form", $eventID) != $formID) {
+    $registerForm = get_field("event_register_form", $eventID);
+    if ($registerForm->ID != $formID) {
         wp_send_json_error("Nastala neočakávaná chyba. Skúste to prosím neskôr. (#1)");
     }
 

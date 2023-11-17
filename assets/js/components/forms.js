@@ -1,6 +1,6 @@
 import Commons from "./commons.js"
 
-export default class Forms extends Commons{
+export default class Forms extends Commons {
     constructor() {
         super();
     }
@@ -78,7 +78,7 @@ export default class Forms extends Commons{
                 let text = field.querySelector(".drag-drop-text .text");
                 text.innerHTML = ""
                 text.classList.remove("success", "error")
-            } else if(field.classList.contains("is-textarea")) {
+            } else if (field.classList.contains("is-textarea")) {
                 field.querySelector("textarea").height = "auto"
                 field.querySelector(".form-field").value = ""
             } else {
@@ -281,28 +281,50 @@ export default class Forms extends Commons{
                         })
 
                         input.addEventListener("change", function (e) {
-                            updateFieldStatus(input.files[0]);
-                        })
+                            let files = e.target.files;
+                            let validFiles = [];
 
-                        function updateFieldStatus(file) {
-                            let filecheck = _thisClass.checkFile(file, supports.replaceAll(" ", "").split(","))
-                            if (filecheck === true) {
-                                infoText.classList.add("success")
-                                infoText.innerHTML = "Nahraný súbor: <div class='uploaded-file-name'>" + file.name + "</div>"
-                            } else {
-                                if (filecheck === 0) {
-                                    infoText.innerHTML = "Chyba! Tento typ súboru <span>nieje povolený</span>."
-                                } else {
-                                    infoText.innerHTML = "Chyba! Maximálna povolená veľkosť súboru je <span>1MB</span>."
+                            for (let i = 0; i < files.length; i++) {
+                                let file = files[i];
+                                let filecheck = _thisClass.checkFile(file, supports.replaceAll(" ", "").split(","));
+                                if (filecheck === true) {
+                                    validFiles.push(file);
                                 }
-                                infoText.classList.add("error")
-                                infoText.classList.remove("success")
-                                input.value = ""
                             }
 
-                            dropHereText.classList.add("d-none")
-                            dragDropText.classList.remove("d-none")
+                            if (validFiles.length > 0) {
+                                updateFieldStatus(validFiles);
+                            } else {
+                                infoText.innerHTML = "Chyba! Niektorý z týchto typov súborov <span>nie je povolený</span> nebo žiadne súbory nespĺňajú požiadavky.";
+                                infoText.classList.add("error");
+                                infoText.classList.remove("success");
+                                input.value = ""; // Clear the input field on error
+                                dropHereText.classList.add("d-none");
+                                dragDropText.classList.remove("d-none");
+                            }
+                        });
+
+                        let uploadedFilesCount = 0; // To store the count of uploaded files
+
+                        function updateFieldStatus(files) {
+                            infoText.classList.add("success");
+                            uploadedFilesCount = files.length; // Set the count of uploaded files
+                            updateUploadedFilesCount(); // Update the displayed count
+
+                            // You can further process each file in the 'files' array if needed
+                            for (let i = 0; i < files.length; i++) {
+                                let file = files[i];
+                                // Process each file here if necessary
+                            }
+
+                            dropHereText.classList.add("d-none");
+                            dragDropText.classList.remove("d-none");
                         }
+
+                        function updateUploadedFilesCount() {
+                            infoText.innerHTML = "Počet nahraných súborov: " + uploadedFilesCount;
+                        }
+
                     }
                 }
             });
@@ -319,14 +341,14 @@ export default class Forms extends Commons{
             let isRequired = container.classList.contains("required");
             let isFile = container.classList.contains("is-file-input");
 
-            if(!isFile && isRequired && this.empty(field.value)) {
+            if (!isFile && isRequired && this.empty(field.value)) {
                 errors[field.id] = "Pole " + fieldName + " musíte vyplniť."
-            } else if(field.type === "email" && !this.validateEmail(field.value)) {
+            } else if (field.type === "email" && !this.validateEmail(field.value)) {
                 errors[field.id] = "Pole " + fieldName + " musí mať správny tvar emailu."
-            } else if(isFile) {
-                if(field.files.length) {
+            } else if (isFile) {
+                if (field.files.length) {
                     fields[field.id] = field.files[0]
-                } else if(isRequired) {
+                } else if (isRequired) {
                     errors[field.id] = "Nahrajte prosím súbor do poľa " + fieldName + "."
                 }
             }

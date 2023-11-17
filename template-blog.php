@@ -18,7 +18,7 @@ $highlights = new WP_Query($args);
 $categories = get_categories(['hide_empty' => false, 'exclude' => [1]])
 
 ?>
-    <div id="blogdata"></div>
+    <div id="blogdata" data-post_type="post"></div>
 
     <div id="blog">
         <!--   INTRO SECTION TEXT ----- START    -->

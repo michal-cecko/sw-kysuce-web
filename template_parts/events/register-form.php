@@ -3,7 +3,7 @@
 <?php if ($form) : ?>
     <div class="form-container">
         <?php $fields = get_field("form_fields", $form->ID) ?>
-        <?php foreach ($fields as $field) : $id = sanitize_title($field['name']) ?>
+        <?php foreach ($fields as $field) : $id = sanitize_title($field['name']); ?>
             <?php if ($field['acf_fc_layout'] === "text" || $field['acf_fc_layout'] === "email") : ?>
                 <div class="form-field-container movable-label <?= ($field['is_textarea'] ?? false) ? "is-textarea" : ""  ?> <?= required($field) ?> <?= $field['acf_fc_layout'] === "email" ? 'is-email' : 'is-text' ?>" data-name="<?= $field['name'] ?>">
                     <label for="<?= $id ?>"><?= $field['name'] ?></label>

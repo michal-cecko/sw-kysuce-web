@@ -17,7 +17,7 @@ $link = !empty($formLink) ? get_the_permalink($event->ID) : $externalLink;
         <?php endif ?>
 
         <?php if (!empty($tags)) : ?>
-            <div class="tags">
+            <div class="tags mb-4">
                 <?php foreach ($tags as $tag) : ?>
                     <div class="tag outlined white small"><?= $tag->name ?></div>
                 <?php endforeach ?>

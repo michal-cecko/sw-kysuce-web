@@ -5,10 +5,11 @@ get_header();
 $form = get_field("event_register_form");
 $externalLink = get_field("event_register_link");
 $hasLocalForm = !empty($form);
+
 ?>
 
 <div id="event">
-    <div id="eventData" data-id="<?= get_the_ID() ?>" data-form_id="<?= $form ?>"></div>
+    <div id="eventData" data-id="<?= get_the_ID() ?>" data-form_id="<?= $form->ID ?>"></div>
     <!--   INTRO ----- START    -->
     <section id="eventIntro" class="bg-blue-gradient-side-mirrored">
         <div class="container">

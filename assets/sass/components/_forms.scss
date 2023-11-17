@@ -34,6 +34,7 @@ $borderAndLabelColor: #838286;
 
   &:not(.checkboxes-container) {
     > label {
+      pointer-events: none;
       cursor: pointer;
       display: flex;
       align-items: center;

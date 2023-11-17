@@ -1,0 +1,35 @@
+php_value memory_limit 2048M
+php_value post_max_size 2048M
+php_value upload_max_filesize 2048M
+php_value max_execution_time 999999
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+RewriteEngine On
+RewriteCond %{HTTP_COOKIE} !^.*wordpress_logged_in.*$ [NC]
+RewriteRule ^wp-content/themes/swslovakia/form_uploads/.* - [R=403,L]
+
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /swslovakia/
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /swslovakia/index.php [L]
+</IfModule>
+
+# BEGIN WordPress
+# Inštrukcie (riadky) medzi “BEGIN WordPress” a “END WordPress” sú
+# dynamicky generované a mali by byť upravené iba pomocou filtrov WordPress.
+# Akékoľvek zmeny inštrukcií medzi týmito značkami budú prepísané.
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /swslovakia/
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /swslovakia/index.php [L]
+</IfModule>
+
+# END WordPress
