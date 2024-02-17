@@ -156,12 +156,19 @@ function sw_submit_register_form()
     ]);
 
     if (update_post_meta($formID, 'submitted_forms', json_encode($alreadySubmitted))) {
+
+
+
         wp_send_json_success("Ďakujeme, boli ste úspešne zaregistrovaní na toto podujatie.");
     }
 
     wp_send_json_error("Nepodarilo sa Vás zaregistrovať na tento email. Prosím kontaktujte nás pre viac informácii.");
 }
 
+
+function send_email_to_participant() {
+
+}
 
 function save_uploaded_file($file, $submissionID, $formID)
 {
