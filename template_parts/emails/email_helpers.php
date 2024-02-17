@@ -1,8 +1,0 @@
-<?php
-function horizontal_line($color = "#E0E0E0") { ob_start(); ?>
-    <tr>
-        <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; padding-top: 25px;" class="line">
-            <hr color="<?= $color ?>" align="center" width="100%" size="1" noshade style="margin: 0; padding: 0;"/>
-        </td>
-    </tr>
-<?php return ob_get_clean(); }
