@@ -2,12 +2,12 @@
 
 <?php
 $data = $args['data'] ?? [];
-$title = $args['data']['title'] ?? null;
-$subtitle = $args['data']['subtitle'] ?? null;
-$content = $args['data']['content'] ?? null;
-$hero_image = $args['data']['hero_image'] ?? null;
-$hero_image_link = $args['data']['hero_image_link'] ?? null;
-$add_to_calendar = $args['data']['add_to_calendar'] ?? null;
+$title = $data['title'] ?? null;
+$subtitle = $data['subtitle'] ?? null;
+$content = $data['content'] ?? null;
+$hero_image = $data['hero_image'] ?? null;
+$hero_image_link = $data['hero_image_link'] ?? null;
+$buttons = $data['buttons'] ?? null;
 ?>
 
 <?= get_template_part_as_string("template_parts/emails/parts/head") ?>
@@ -58,9 +58,8 @@ $add_to_calendar = $args['data']['add_to_calendar'] ?? null;
                 <?php endif ?>
 
                 <!-- ADD TO CALENDAR -->
-                <?php if ($add_to_calendar) : ?>
-                    <?= get_template_part_as_string("template_parts/emails/parts/paragraph", ['content' => $add_to_calendar['text']]) ?>
-                    <?= get_template_part_as_string("template_parts/emails/parts/buttons", ['buttons' => [$add_to_calendar]]); ?>
+                <?php if (!empty($buttons)) : ?>
+                    <?= get_template_part_as_string("template_parts/emails/parts/buttons", [$buttons]); ?>
                 <?php endif ?>
 
                 <?= get_template_part_as_string("template_parts/emails/parts/horizontal-line") ?>

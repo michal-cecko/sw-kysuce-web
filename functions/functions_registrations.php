@@ -150,14 +150,17 @@ function sw_submit_register_form()
         }
     }
 
-    $alreadySubmitted[] = array_merge($filesSaved, $fieldsSanitized, [
+    $finalData = array_merge($filesSaved, $fieldsSanitized, [
         'datum_registracie' => date("d.m.Y H:i"),
         'id' => $nextID
     ]);
+    $alreadySubmitted[] = $finalData;
 
     if (update_post_meta($formID, 'submitted_forms', json_encode($alreadySubmitted))) {
 
-
+        if(send_email_to_participant($eventID, $formID, $fieldsSanitized, $filesSaved)) {
+            wp_send_json_error("Nepodarilo odoslať rezervačný email. Prosím skúste to neskôr.");
+        }
 
         wp_send_json_success("Ďakujeme, boli ste úspešne zaregistrovaní na toto podujatie.");
     }
@@ -166,8 +169,56 @@ function sw_submit_register_form()
 }
 
 
-function send_email_to_participant() {
+function send_email_to_participant($eventID, $formID, $submittedFields, $filesSaved)
+{
+    $headers[] = 'Content-Type: text/html; charset=UTF-8';
 
+    $template = prepare_participant_email($eventID, $formID, $submittedFields, $filesSaved);
+    $subject = "SW Slovakia Registrácia | " . get_the_title($eventID);
+    $recipient = get_field("registrations_recipient", $formID);
+
+    return wp_mail($recipient, $subject, $template, $headers);
+}
+
+function prepare_participant_email($eventID, $formID, $submittedFields, $filesSaved)
+{
+    $body = get_field("competitor_email_body", $formID);
+    $suhrnRegistracie = get_template_part_as_string("template_parts/emails/parts/registration-summary", [
+        'data' => array_merge(
+            $submittedFields,
+            $filesSaved
+        )
+    ]);
+    $body = replace_constants([
+        'MENO' => $submittedFields['meno'],
+        'PRIEZVISKO' => $submittedFields['priezvisko'],
+        'SUHRN_REGISTRACIE' => $suhrnRegistracie,
+    ], $body);
+
+    $hasRegisterFee = get_field("has_register_fee", $formID);
+    if ($hasRegisterFee) {
+        $suhrnPlatby = get_template_part_as_string("template_parts/emails/parts/payment-summary", [
+            'data' => array_merge(
+                get_field("payment_info", $formID),
+                ['support_email' => get_field("registrations_recipient", $formID)]
+            )
+        ]);
+        $body = replace_constants([
+            'SUHRN_PLATBY' => $suhrnPlatby,
+        ], $body);
+    }
+
+    $buttons = get_field('externe_odkazy', $formID);
+    $buttons[] = ['url' => 'https://google.sk/', 'name' => "Pridať do kalendára", 'color' => '#f59542'];
+
+    $template = get_template_part_as_string("template_parts/emails/templates/default-email-template", ['data' => [
+        'title' => get_the_title($eventID),
+        'subtitle' => "Súhrn vašej registrácie",
+        'content' => $body,
+        $buttons
+    ]]);
+
+    return $template;
 }
 
 function save_uploaded_file($file, $submissionID, $formID)
@@ -227,12 +278,13 @@ function remove_submission(&$array, $targetId)
 }
 
 
-
-function hook_before_removal_of_form_post_type($post_id) {
+function hook_before_removal_of_form_post_type($post_id)
+{
     if (get_post_type($post_id) === 'form') {
         remove_directory(get_template_directory() . '/form_uploads/' . $post_id);
     }
 }
+
 add_action('before_delete_post', 'hook_before_removal_of_form_post_type');
 
 
