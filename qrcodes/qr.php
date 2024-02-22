@@ -21,7 +21,7 @@ $d = implode("\t", array(
 ));
 $d = strrev(hash("crc32b", $d, TRUE)) . $d;
 //CHANGE XZ PATH TO YOUR ON YOUR DEVICE - pomocou "which xz" commandu v CMD
-$xzPath = "/opt/homebrew/bin/xz";
+$xzPath = LOCALHOST ? "/opt/homebrew/bin/xz" : "/usr/bin/xz";
 $x = proc_open($xzPath . " '--format=raw' '--lzma1=lc=3,lp=0,pb=2,dict=128KiB' '-c' '-'", [0 => ["pipe", "r"], 1 => ["pipe", "w"]], $p);
 fwrite($p[0], $d);
 fclose($p[0]);

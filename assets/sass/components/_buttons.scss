@@ -2,6 +2,7 @@
 
 .learn-more-btn {
   display: flex;
+  cursor: pointer;
   align-items: center;
   justify-content: center;
   color: $primaryRed;
@@ -11,6 +12,7 @@
   border: none;
   width: fit-content;
   line-height: 150%;
+  position: relative;
 
   .icon {
     width: 3rem;
@@ -21,11 +23,32 @@
     align-items: center;
     background: $primaryRed;
     margin-left: 0.75rem;
+    position: relative;
+    transition: all 0.3s ease;
+
+    svg {
+      transition: all 0.3s ease;
+      transform: translate(-50%, -50%);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: center;
+    }
+  }
+
+  @media(hover: hover) {
+    &:hover {
+      .icon {
+        background: $primaryRedHovered;
+      }
+    }
   }
 
   &.down {
     .icon {
-      transform: rotate(90deg);
+      svg {
+        transform: translate(-50%, -50%) rotate(90deg);
+      }
     }
   }
 
@@ -33,6 +56,37 @@
     .icon {
       width: 4rem;
       height: 4rem;
+    }
+  }
+
+  &.btn--loader {
+    .icon {
+      svg {
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .loader {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform-origin: center;
+        transition: all 0.3s ease;
+        transform: translate(-50%, -50%) scale(0);
+      }
+    }
+
+    &.loading {
+      pointer-events: none;
+
+      .icon {
+        svg {
+          transform: translate(-50%, -50%) scale(0);
+        }
+
+        .loader {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
     }
   }
 }

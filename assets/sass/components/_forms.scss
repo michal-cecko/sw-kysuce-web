@@ -17,6 +17,7 @@ $borderAndLabelColor: #838286;
     color: $primaryBlack;
     transition: all 0.3s ease;
     caret-color: $primaryRed;
+    font-family: $secondaryFont;
     cursor: pointer;
 
     &::placeholder {
@@ -83,6 +84,8 @@ $borderAndLabelColor: #838286;
         font-size: 1rem;
         line-height: 1.5rem;
         color: $primaryBlack;
+        column-gap: 0.35rem;
+        row-gap: 0.35rem;
       }
     }
 
@@ -212,6 +215,7 @@ $borderAndLabelColor: #838286;
     //https://kovart.github.io/dashed-border-generator/
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23838286' stroke-width='3' stroke-dasharray='15%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
     width: 100%;
+    position: relative;
 
     input{
       width: 0;

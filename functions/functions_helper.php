@@ -307,9 +307,17 @@ function checkCaptcha($responseToken)
 
 function validation( $data )
 {
+    if(is_array($data)) {
+        foreach ($data as $key => $value) {
+            $data[$key] = validation($value);
+        }
+        return $data;
+    }
+
     $data = trim( $data );
     $data = stripslashes( $data );
     $data = htmlspecialchars( $data );
+
     return $data;
 }
 
@@ -444,4 +452,11 @@ function custom_remove_accents($string)
     $string = strtr($string, $chars);
 
     return $string;
+}
+
+function decodeUnicodeString($str) {
+    $decoded_str = preg_replace_callback('/u([0-9a-fA-F]{4})/', function ($match) {
+        return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE');
+    }, $str);
+    return $decoded_str;
 }

@@ -29,22 +29,20 @@ $buttons = $data['buttons'] ?? null;
             <!-- IMAGE LOGO -->
             <?= get_template_part_as_string("template_parts/emails/parts/preheader", [
                 'link' => get_site_url(),
-                //TODO IMAGE HERE
-                'image' => ""
+                'image' => image_path() . "/logo.png",
             ]) ?>
 
             <!-- WRAPPER / CONTEINER -->
             <!-- Set conteiner background color -->
-            <table border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF" width="560" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
-	max-width: 560px;" class="container">
-
+            <table border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="#FFFFFF" width="100%" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
+	max-width: 960px;" class="container">
                 <!-- HEADER -->
                 <?php if ($title) : ?>
-                    <?= get_template_part_as_string("template_parts/emails/parts/title", [$title]) ?>
+                    <?= get_template_part_as_string("template_parts/emails/parts/title", ['title' => $title]) ?>
                 <?php endif ?>
 
                 <?php if ($subtitle) : ?>
-                    <?= get_template_part_as_string("template_parts/emails/parts/subtitle", [$subtitle]) ?>
+                    <?= get_template_part_as_string("template_parts/emails/parts/subtitle", ['subtitle' => $subtitle]) ?>
                 <?php endif ?>
 
                 <!-- HERO IMAGE -->
@@ -54,12 +52,12 @@ $buttons = $data['buttons'] ?? null;
 
                 <!-- CONTENT -->
                 <?php if ($content) : ?>
-                    <?= get_template_part_as_string("template_parts/emails/parts/paragraph", [$content]) ?>
+                    <?= get_template_part_as_string("template_parts/emails/parts/paragraph", ['content' => $content]) ?>
                 <?php endif ?>
 
                 <!-- ADD TO CALENDAR -->
                 <?php if (!empty($buttons)) : ?>
-                    <?= get_template_part_as_string("template_parts/emails/parts/buttons", [$buttons]); ?>
+                    <?= get_template_part_as_string("template_parts/emails/parts/buttons", ['buttons' => $buttons]); ?>
                 <?php endif ?>
 
                 <?= get_template_part_as_string("template_parts/emails/parts/horizontal-line") ?>

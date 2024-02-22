@@ -18,3 +18,5 @@ include "functions/functions_registrations.php";
 include "functions/functions_userroles.php";
 
 include "functions/functions_playgrounds.php";
+
+include "functions/functions_qrcodes.php";

@@ -1,11 +1,9 @@
 <?php
 
-function generate_pay_by_square($amount, $note)
+function generate_pay_by_square_qr($iban, $amount, $note, $vs = "")
 {
-    $price = $amount;
-    $iban = get_field("transparent_bank_acc_iban", "options");
+    $price = floatval($amount);
     $note = strtolower(custom_remove_accents($note));
-    $vs = "";//leave empty if not needed
     $cs = "";//leave empty if not needed
     $ss = "";//leave empty if not needed
     $swift = "TATRSKBX";

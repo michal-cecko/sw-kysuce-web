@@ -82,7 +82,7 @@ function sw_register_submitted_forms_meta_box()
 
 function sw_print_submitted_forms($form)
 {
-    $rows = json_decode(get_post_meta($form->ID, "submitted_forms", true), true);
+    $rows = json_decode(decodeUnicodeString(get_post_meta($form->ID, "submitted_forms", true)), true);
     get_template_part("template_parts/admin/submitted_form-rows", "", compact("rows", "form"));
 }
 
@@ -132,7 +132,8 @@ function sw_submit_register_form()
                     $nextID = intval($submission['id']) + 1;
                 }
             }
-            if ($checkUniqueEmail) {
+            //TODO REMOVE LATER FALSE
+            if (false && $checkUniqueEmail) {
                 foreach ($submission as $field => $value) {
                     if (str_contains($field, "email") && $value == $fields[$field]) {
                         wp_send_json_error("Tento email už je zaregistrovaný na tento event. (#2)");
@@ -144,6 +145,7 @@ function sw_submit_register_form()
 
     $filesSaved = [];
     foreach ($_FILES as $file) {
+        var_dump($file);
         if ($savedURL = save_uploaded_file($file, $nextID, $formID)) {
             $fileKey = key($file['name']);
             $filesSaved[$fileKey] = $savedURL;
@@ -158,8 +160,8 @@ function sw_submit_register_form()
 
     if (update_post_meta($formID, 'submitted_forms', json_encode($alreadySubmitted))) {
 
-        if(send_email_to_participant($eventID, $formID, $fieldsSanitized, $filesSaved)) {
-            wp_send_json_error("Nepodarilo odoslať rezervačný email. Prosím skúste to neskôr.");
+        if (send_email_to_participant($eventID, $formID, $fieldsSanitized, $filesSaved, $nextID)) {
+            wp_send_json_error("Nepodarilo odoslať registračný email. Prosím skúste to neskôr.");
         }
 
         wp_send_json_success("Ďakujeme, boli ste úspešne zaregistrovaní na toto podujatie.");
@@ -169,18 +171,18 @@ function sw_submit_register_form()
 }
 
 
-function send_email_to_participant($eventID, $formID, $submittedFields, $filesSaved)
+function send_email_to_participant($eventID, $formID, $submittedFields, $filesSaved, $submissionID)
 {
     $headers[] = 'Content-Type: text/html; charset=UTF-8';
 
-    $template = prepare_participant_email($eventID, $formID, $submittedFields, $filesSaved);
+    $template = prepare_participant_email($eventID, $formID, $submittedFields, $filesSaved, $submissionID);
     $subject = "SW Slovakia Registrácia | " . get_the_title($eventID);
     $recipient = get_field("registrations_recipient", $formID);
 
     return wp_mail($recipient, $subject, $template, $headers);
 }
 
-function prepare_participant_email($eventID, $formID, $submittedFields, $filesSaved)
+function prepare_participant_email($eventID, $formID, $submittedFields, $filesSaved, $submissionID)
 {
     $body = get_field("competitor_email_body", $formID);
     $suhrnRegistracie = get_template_part_as_string("template_parts/emails/parts/registration-summary", [
@@ -200,7 +202,12 @@ function prepare_participant_email($eventID, $formID, $submittedFields, $filesSa
         $suhrnPlatby = get_template_part_as_string("template_parts/emails/parts/payment-summary", [
             'data' => array_merge(
                 get_field("payment_info", $formID),
-                ['support_email' => get_field("registrations_recipient", $formID)]
+                [
+                    'support_email' => get_field("registrations_recipient", $formID),
+                    'meno' => $submittedFields['meno'],
+                    'priezvisko' => $submittedFields['priezvisko'],
+                    'submission_id' => $submissionID,
+                ]
             )
         ]);
         $body = replace_constants([
@@ -210,12 +217,11 @@ function prepare_participant_email($eventID, $formID, $submittedFields, $filesSa
 
     $buttons = get_field('externe_odkazy', $formID);
     $buttons[] = ['url' => 'https://google.sk/', 'name' => "Pridať do kalendára", 'color' => '#f59542'];
-
     $template = get_template_part_as_string("template_parts/emails/templates/default-email-template", ['data' => [
         'title' => get_the_title($eventID),
         'subtitle' => "Súhrn vašej registrácie",
         'content' => $body,
-        $buttons
+        'buttons' => $buttons
     ]]);
 
     return $template;
@@ -298,7 +304,7 @@ function export_submissions()
     if (!$form_id) die("Nebolo zadané ID formuláru");
 
     // Get the submitted forms meta JSON
-    $submitted_forms = json_decode(get_post_meta($form_id, 'submitted_forms', true), true);
+    $submitted_forms = json_decode(decodeUnicodeString(get_post_meta($form_id, 'submitted_forms', true)), true);
 
     if (!empty($submitted_forms)) {
         // Create a new spreadsheet
@@ -325,7 +331,7 @@ function export_submissions()
             foreach ($form as $value) {
                 // Set the value in the spreadsheet
                 $cellCoordinate = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($column) . $row;
-                $sheet->setCellValue($cellCoordinate, $value);
+                $sheet->setCellValue($cellCoordinate, is_array($value) ? implode(", ", $value) : $value);
                 $column++;
             }
 

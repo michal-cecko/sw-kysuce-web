@@ -1,0 +1,97 @@
+@mixin openedTooltip() {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.tooltip-container {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+
+  .tooltip {
+    position: relative;
+
+    .info {
+      position: absolute;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      transform: translateY(0.35rem);
+      top: 0;
+      background: $primaryBlack;
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      width: max-content;
+      max-width: 36rem;
+      color: $primaryWhite;
+      font-family: $secondaryFont;
+
+      @include media-breakpoint-down(md) {
+        max-width: 75vw;
+      }
+
+      * {
+        font-family: $secondaryFont;
+        color: $primaryWhite;
+      }
+
+      b {
+        font-weight: 500;
+      }
+
+      a {
+        font-weight: 500;
+        color: $primaryRed;
+      }
+    }
+
+    .icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      cursor: pointer;
+      border-radius: 50%;
+      background: $primaryRed;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @media(hover: hover) {
+      &:hover {
+        .info {
+          @include openedTooltip();
+        }
+      }
+    }
+  }
+
+  &.active {
+    .tooltip {
+      .info {
+        @include openedTooltip();
+      }
+    }
+  }
+
+  &.show-on-left {
+    .icon {
+      margin-left: 1rem;
+    }
+
+    .info {
+      right: calc(100% - 0.5rem);
+    }
+  }
+
+  &.show-on-right {
+    .icon {
+      margin-right: 1rem;
+    }
+
+    .info {
+      left: calc(100% - 0.5rem);
+    }
+  }
+}

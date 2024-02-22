@@ -1,5 +1,6 @@
 import Commons from "./commons.js"
 import Forms from "./forms.js"
+import SkeletonLoader from "./skeleton-loader.js"
 
 class Event extends Commons {
 
@@ -7,6 +8,8 @@ class Event extends Commons {
         super();
 
         this.forms = new Forms();
+        this.skeleton = new SkeletonLoader();
+
         this.init();
     }
 
@@ -27,8 +30,17 @@ class Event extends Commons {
                 console.log("Event Vue component has been created.")
             },
             mounted() {
+                _thisClass.skeleton.loaded()
                 this.eventData = document.querySelector("#eventData")?.dataset
-                _thisClass.forms._prepareFormFields()
+                this.fields = _thisClass.forms._prepareFormFields()
+            },
+            watch: {
+                fields:{
+                    deep: true,
+                    handler() {
+                        console.log(this.fields);
+                    }
+                }
             },
             methods: {
                 async send() {
@@ -73,8 +85,9 @@ class Event extends Commons {
                             return false;
                         }
 
-                        this.fields = {}
-                        _thisClass.forms.resetForm(document.querySelector(".form-container"))
+                        //TODO UNCOMMENT LATER
+                        //this.fields = {}
+                        //_thisClass.forms.resetForm(document.querySelector(".form-container"))
                         _thisClass.notify(response.data, "success")
 
                     } catch (error) {
@@ -84,7 +97,7 @@ class Event extends Commons {
                     } finally {
                         this.sending = false;
                     }
-                }
+                },
             },
         });
     }

@@ -38,7 +38,7 @@ export default class Forms extends Commons {
         }
 
         //check max filesize
-        const maxFileSize = 1 * 1024 * 1024; // 1 MB in bytes
+        const maxFileSize = 2 * 1024 * 1024; // 2 MB in bytes
         if (file && file.size > maxFileSize) {
             allow = 1;
         }
@@ -111,6 +111,8 @@ export default class Forms extends Commons {
     _prepareFormFields() {
         let _thisClass = this;
 
+        let defaultValues = {};
+
         this.waitForElementToDisplay(".form-field-container", function () {
             let fields = document.querySelectorAll(".form-field-container");
             fields.forEach(field => {
@@ -125,6 +127,13 @@ export default class Forms extends Commons {
                     //Input + Textarea
                     if (field.classList.contains("is-text") || field.classList.contains("is-email")) {
                         let input = field.querySelector(".form-field");
+                        let defaultValue = input.dataset?.default;
+
+                        if(defaultValue?.length) {
+                            field.classList.add(filledClass, focusedClass);
+                            defaultValues[input.name] = defaultValue
+                        }
+
                         input.addEventListener('focusin', function () {
                             field.classList.add(focusedClass)
                         });
@@ -158,6 +167,10 @@ export default class Forms extends Commons {
                         let isMultiple = field.classList.contains("multiple");
                         let openedOptionsClass = "opened";
                         let selectedOptionClass = "selected";
+                        let defaults = hiddenInputOfSelect.dataset?.default?.split("###")
+                        defaults = defaults.length ? defaults : [];
+                        if(!isMultiple && defaults.length > 1) defaults = defaults[0]
+                        defaultValues[hiddenInputOfSelect.id] = defaults
 
                         const hasValue = function () {
                             return hiddenInputOfSelect.value === "" || hiddenInputOfSelect.value === "[]";
@@ -182,7 +195,22 @@ export default class Forms extends Commons {
                             }
                         });
 
+                        if(defaults.length) {
+                            field.classList.add(filledClass)
+                            if(isMultiple){
+                                _thisClass.setMultipleSelectOptionsHTML(defaults, focusTarget, hiddenInputOfSelect);
+                            } else {
+                                let value = defaults[0]
+                                _thisClass.setSingularSelectOptionHTML(value, focusTarget, hiddenInputOfSelect, field, openedOptionsClass);
+                            }
+                        }
+                        
                         options.forEach(option => {
+
+                            if (defaults?.indexOf(option.dataset.value) !== -1) {
+                                option.classList.add(selectedOptionClass)
+                            }
+
                             option.addEventListener("click", function () {
                                 if (isMultiple) {
                                     option.classList.toggle(selectedOptionClass);
@@ -193,24 +221,15 @@ export default class Forms extends Commons {
                                     })
 
                                     //Show selected values
-                                    let html = ""
-                                    selectedValues.forEach(selected => {
-                                        html += "<div class='tag small red'>" + selected + "</div>"
-                                    })
-                                    focusTarget.innerHTML = html
-                                    hiddenInputOfSelect.value = JSON.stringify(selectedValues)
+                                    _thisClass.setMultipleSelectOptionsHTML(selectedValues, focusTarget, hiddenInputOfSelect);
                                 } else {
                                     field.querySelectorAll(".option." + selectedOptionClass).forEach(selectedOption => {
                                         selectedOption.classList.remove(selectedOptionClass)
                                     })
 
                                     option.classList.add(selectedOptionClass);
-
                                     let value = option.dataset.value
-                                    focusTarget.innerHTML = value
-                                    hiddenInputOfSelect.value = value
-
-                                    field.classList.remove(openedOptionsClass)
+                                    _thisClass.setSingularSelectOptionHTML(value, focusTarget, hiddenInputOfSelect, field, openedOptionsClass);
                                 }
 
                                 const event = new Event('change');
@@ -218,17 +237,27 @@ export default class Forms extends Commons {
                             });
                         })
                     }
-                } else if (field.classList.contains("checkboxes-container")) {
-                    let checkboxes = document.querySelectorAll("input")
+                }
+
+                // Checkboxes
+                else if (field.classList.contains("checkboxes-container")) {
+                    let checkboxes = field.querySelectorAll("input")
                     let multiple = field.classList.contains("multiple")
+                    let defaults = [];
+                    let fieldID = field.dataset.id;
+
                     checkboxes.forEach(cb => {
+                        if(cb.checked) defaults.push(cb.value)
+
                         cb.addEventListener("change", function () {
+                            let parent = cb.closest(".checkboxes")
+                            let cbsInGroup = parent.querySelectorAll("input");
                             if (!multiple) {
                                 if (!cb.checked) {
                                     cb.checked = true
                                     return;
                                 }
-                                checkboxes.forEach(cbCheck => {
+                                cbsInGroup.forEach(cbCheck => {
                                     if (cbCheck !== cb) {
                                         cbCheck.checked = false
                                     }
@@ -236,7 +265,13 @@ export default class Forms extends Commons {
                             }
                         })
                     })
-                } else {
+
+                    defaultValues[fieldID] = defaults
+                }
+
+
+                // File
+                else {
                     if (field.classList.contains("is-file-input")) {
                         let input = field.querySelector("input")
                         let supports = field.dataset.allowed_types
@@ -295,7 +330,7 @@ export default class Forms extends Commons {
                             if (validFiles.length > 0) {
                                 updateFieldStatus(validFiles);
                             } else {
-                                infoText.innerHTML = "Chyba! Niektorý z týchto typov súborov <span>nie je povolený</span> nebo žiadne súbory nespĺňajú požiadavky.";
+                                infoText.innerHTML = "Chyba! Niektorý z týchto typov súborov <span>nie je povolený</span> alebo žiadne súbory nespĺňajú požiadavky.";
                                 infoText.classList.add("error");
                                 infoText.classList.remove("success");
                                 input.value = ""; // Clear the input field on error
@@ -329,6 +364,24 @@ export default class Forms extends Commons {
                 }
             });
         }, 10, 10000)
+
+        return defaultValues;
+    }
+
+    setSingularSelectOptionHTML(value, focusTarget, hiddenInputOfSelect, field, openedOptionsClass) {
+        focusTarget.innerHTML = value
+        hiddenInputOfSelect.value = value
+
+        field.classList.remove(openedOptionsClass)
+    }
+
+    setMultipleSelectOptionsHTML(selectedValues, focusTarget, hiddenInputOfSelect) {
+        let html = ""
+        selectedValues.forEach(selected => {
+            html += "<div class='tag small red'>" + selected + "</div>"
+        })
+        focusTarget.innerHTML = html
+        hiddenInputOfSelect.value = JSON.stringify(selectedValues)
     }
 
     validateFormFields(fieldNodes) {

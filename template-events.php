@@ -135,7 +135,7 @@ $upcomingEvents = new WP_Query($args);
                     <div class="posts-wrapper">
                         <div class="loader" :class="loading ? 'active' : ''">
                             <lord-icon
-                                    src="<?= icon_path() ?>/icon-loader.json"
+                                    src="<?= icon_path() ?>/icon-loader-three-dots.json"
                                     trigger="loop"
                                     colors="primary:#F03834,secondary:#FFFFFF">
                             </lord-icon>

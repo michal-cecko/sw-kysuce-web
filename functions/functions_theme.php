@@ -7,7 +7,8 @@ if ($ip == '127.0.0.1' or $ip == '::1') {
 }
 
 $version = wp_get_theme()->parent()->Version ?? "1.0.0";
-DEFINE("VERSION", LOCALHOST ? time() : $version);
+DEFINE("VERSION", time());
+//DEFINE("VERSION", LOCALHOST ? time() : $version);
 
 // THEME SETUP
 
@@ -216,6 +217,8 @@ function enqueue_custom_scripts_links(): void
         $recaptchaSiteKey = "***REMOVED***";
         wp_enqueue_script('recaptcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $recaptchaSiteKey);
     }
+
+    enqueue_component("tooltip");
 
     //STYLES
 
