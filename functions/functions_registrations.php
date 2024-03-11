@@ -143,12 +143,26 @@ function sw_submit_register_form()
         }
     }
 
-    $filesSaved = [];
+    $filesToSave = [];
     foreach ($_FILES as $file) {
-        var_dump($file);
-        if ($savedURL = save_uploaded_file($file, $nextID, $formID)) {
-            $fileKey = key($file['name']);
-            $filesSaved[$fileKey] = $savedURL;
+        foreach ($file['name'] as $fieldKey => $fileName) {
+            $arr = explode(".", $fileName);
+            $filesToSave[$fieldKey] = [
+                'name' => $fileName,
+                'image_type' => end($arr),
+                'tmp_name' => $file['tmp_name'][$fieldKey],
+                'full_path' => $file['full_path'][$fieldKey],
+                'type' => $file['type'][$fieldKey],
+                'error' => $file['error'][$fieldKey],
+                'size' => $file['size'][$fieldKey],
+            ];
+        }
+    }
+
+    $filesSaved = [];
+    foreach ($filesToSave as $fieldKey => $fileToSave) {
+        if ($savedURL = save_uploaded_file($fieldKey, $fileToSave, $nextID, $formID)) {
+            $filesSaved[$fieldKey] = $savedURL;
         }
     }
 
@@ -160,8 +174,8 @@ function sw_submit_register_form()
 
     if (update_post_meta($formID, 'submitted_forms', json_encode($alreadySubmitted))) {
 
-        if (send_email_to_participant($eventID, $formID, $fieldsSanitized, $filesSaved, $nextID)) {
-            wp_send_json_error("Nepodarilo odoslať registračný email. Prosím skúste to neskôr.");
+        if (!send_email_to_participant($eventID, $formID, $fieldsSanitized, $filesSaved, $nextID)) {
+            wp_send_json_error("Nepodarilo sa odoslať registračný email. Prosím skúste to neskôr.");
         }
 
         wp_send_json_success("Ďakujeme, boli ste úspešne zaregistrovaní na toto podujatie.");
@@ -185,12 +199,15 @@ function send_email_to_participant($eventID, $formID, $submittedFields, $filesSa
 function prepare_participant_email($eventID, $formID, $submittedFields, $filesSaved, $submissionID)
 {
     $body = get_field("competitor_email_body", $formID);
+    $fieldNames = get_field_names_from_flexible_content(get_field("form_fields", $formID));
     $suhrnRegistracie = get_template_part_as_string("template_parts/emails/parts/registration-summary", [
         'data' => array_merge(
             $submittedFields,
             $filesSaved
-        )
+        ),
+        'fieldNames' => $fieldNames
     ]);
+
     $body = replace_constants([
         'MENO' => $submittedFields['meno'],
         'PRIEZVISKO' => $submittedFields['priezvisko'],
@@ -199,17 +216,7 @@ function prepare_participant_email($eventID, $formID, $submittedFields, $filesSa
 
     $hasRegisterFee = get_field("has_register_fee", $formID);
     if ($hasRegisterFee) {
-        $suhrnPlatby = get_template_part_as_string("template_parts/emails/parts/payment-summary", [
-            'data' => array_merge(
-                get_field("payment_info", $formID),
-                [
-                    'support_email' => get_field("registrations_recipient", $formID),
-                    'meno' => $submittedFields['meno'],
-                    'priezvisko' => $submittedFields['priezvisko'],
-                    'submission_id' => $submissionID,
-                ]
-            )
-        ]);
+        $suhrnPlatby = get_suhrn_platby($formID, $submittedFields, $submissionID);
         $body = replace_constants([
             'SUHRN_PLATBY' => $suhrnPlatby,
         ], $body);
@@ -227,26 +234,111 @@ function prepare_participant_email($eventID, $formID, $submittedFields, $filesSa
     return $template;
 }
 
-function save_uploaded_file($file, $submissionID, $formID)
-{
-    // Create a directory based on the current post ID
-    $fileKey = key($file['name']);
-    $path = get_template_directory() . '/form_uploads/' . $formID . '/' . $submissionID . "/" . $fileKey;
-    $finalPath = get_template_directory_uri() . '/form_uploads/' . $formID . '/' . $submissionID . "/" . $fileKey;
-    $post_dir = trailingslashit($path);
-    wp_mkdir_p($post_dir);
-
-    // Generate a unique file name
-    $filename = wp_unique_filename($post_dir, $file['name'][$fileKey]);
-
-    // Move the uploaded file to the post-specific directory
-    $saved = move_uploaded_file($file['tmp_name'][$fileKey], $post_dir . $filename);
-
-    if ($saved) {
-        return trailingslashit($finalPath) . $filename;
-    } else {
-        return false;
+function get_field_names_from_flexible_content($flexibleContent) {
+    $fieldNames = [];
+    foreach ($flexibleContent as $field) {
+        $fieldNames[sanitize_title($field['name'])] = $field['name'];
     }
+    return $fieldNames;
+}
+
+
+function get_suhrn_platby($formID, $submittedFields, $submissionID)
+{
+    $paymentInfo = get_field("payment_info", $formID);
+    $note = replace_constants([
+        'MENO' => $submittedFields['meno'],
+        'PRIEZVISKO' => $submittedFields['priezvisko'],
+    ], $paymentInfo['pay_by_square_note']);
+
+    $payBySquareBase64 = 'data:image/png;base64,' . base64_encode(generate_pay_by_square_qr($paymentInfo['iban'], $paymentInfo['amount'], $note));
+    $payBySquare = save_uploaded_file("pay_by_square", $payBySquareBase64, $submissionID, $formID);
+    return get_template_part_as_string("template_parts/emails/parts/payment-summary", [
+        'data' => array_merge(
+            $paymentInfo,
+            [
+                'note' => $note,
+                'support_email' => get_field("registrations_recipient", $formID),
+                'meno' => $submittedFields['meno'],
+                'priezvisko' => $submittedFields['priezvisko'],
+                'submission_id' => $submissionID,
+                'pay_by_square' => $payBySquare
+            ]
+        )
+    ]);
+}
+
+function get_file_from_base64($data)
+{
+    if (preg_match('/^data:image\/(\w+);base64,/', $data, $type)) {
+        $data = substr($data, strpos($data, ',') + 1);
+        $type = strtolower($type[1]); // jpg, png, gif
+
+        if (!in_array($type, ['jpg', 'jpeg', 'gif', 'png'])) {
+            throw new \Exception('invalid image type');
+        }
+        $data = str_replace(' ', '+', $data);
+        $data = base64_decode($data);
+
+        if ($data === false) {
+            throw new \Exception('base64_decode failed');
+        }
+    } else {
+        throw new \Exception('did not match data URI with image data');
+    }
+
+    return ['image_data' => $data, 'image_type' => $type];
+}
+
+function save_uploaded_file($filename_to_save, $file, $submissionID, $formID)
+{
+    // Create directory for the submission
+    $submissionDirectory = wp_upload_dir()['basedir'] . '/form_uploads/' . $formID . '/' . $submissionID;
+    if (!wp_mkdir_p($submissionDirectory)) {
+        return false; // Unable to create directory, handle accordingly
+    }
+
+    // Check if $file is a base64 encoded string
+    if (is_string($file) && str_contains($file, ";base64")) {
+        try {
+            $file = get_file_from_base64($file);
+        } catch (Exception $e) {
+            return false; // Handle the exception gracefully
+        }
+
+        // Get the file extension from the original filename
+        $filename_to_save = $filename_to_save . "." . $file['image_type'];
+
+        // Generate unique filename for the final file
+        $filename = wp_unique_filename($submissionDirectory, $filename_to_save);
+
+        // Construct final file path
+        $finalFilePath = $submissionDirectory . '/' . $filename;
+
+        // Save the base64 decoded file directly to the final folder
+        if (!file_put_contents($finalFilePath, $file['image_data']) || !chmod($finalFilePath, 0777)) {
+            return false; // Unable to save file or set permissions, handle accordingly
+        }
+
+    } else {
+        // If $file is not base64 encoded, proceed with regular file saving logic
+
+        $filename_to_save = $filename_to_save . "." . $file['image_type'];
+
+        // Generate unique file name
+        $filename = wp_unique_filename($submissionDirectory, $filename_to_save);
+
+        // Move the uploaded file to the submission directory
+        $tmpPath = $file['tmp_name'];
+        $finalFilePath = $submissionDirectory . '/' . $filename;
+
+
+        if (!file_exists($tmpPath) || !move_uploaded_file($tmpPath, $finalFilePath)) {
+            return false; // Unable to move file, handle accordingly
+        }
+    }
+
+    return wp_upload_dir()['baseurl'] . '/form_uploads/' . $formID . '/' . $submissionID . '/' . $filename;
 }
 
 

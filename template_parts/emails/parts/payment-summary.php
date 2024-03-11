@@ -1,10 +1,6 @@
 <?php
 $data = $args['data'] ?? [];
-$data['pay_by_square_note'] = replace_constants([
-    'MENO' => $data['meno'],
-    'PRIEZVISKO' => $data['priezvisko'],
-], $data['pay_by_square_note']);
-$payBySquare = 'data:image/png;base64,' . base64_encode(generate_pay_by_square_qr($data['iban'], $data['amount'], $data['pay_by_square_note']));
+$payBySquare = $data['pay_by_square'] ?? null;
 ?>
     <table>
         <tr>
@@ -13,13 +9,13 @@ $payBySquare = 'data:image/png;base64,' . base64_encode(generate_pay_by_square_q
                     <img border="0" vspace="0" hspace="0"
                          src="<?= $payBySquare ?>"
                          alt="PAY BY SQUARE QR"
-                         style="width: 90%; max-width: 270px; margin: 0; padding: 0; outline: none; border: none; display: block;"/>
+                         style="width: 90%; max-width: 370px; margin: 0; padding: 0; outline: none; border: none; display: block;"/>
                 </td>
             <?php endif ?>
             <td width="<?= !empty($payBySquare) ? "50%" : "100%" ?>" valign="top">
                 IBAN: <br><b><?= $data['iban'] ?></b><br><br>
                 Suma: <br><b><?= $data['amount'] ?>€</b><br><br>
-                Poznámka: <br><b><?= $data['manual_note'] ?></b><br>
+                Poznámka: <br><b><?= $data['note'] ?></b><br>
             </td>
         </tr>
     </table>

@@ -10,6 +10,10 @@
           integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <meta name="google-site-verification" content="91-s8rY74MZ00CLF--2BkLIm3G9nlDh0zXLxTNq2lZI" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= favicon_path() ?>/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= favicon_path() ?>/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= favicon_path() ?>/favicon-16x16.png">
+    <link rel="manifest" href="<?= favicon_path() ?>/site.webmanifest">
     <?php wp_head(); ?>
 </head>
 <body>

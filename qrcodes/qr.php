@@ -6,12 +6,12 @@ $d = implode("\t", array(
         true,
         $price,						// SUMA
         'EUR',						// JEDNOTKA
-        $date,					// DATUM
-        $vs,					// VARIABILNY SYMBOL
-        $ks,						// KONSTANTNY SYMBOL
-        $ss,						// SPECIFICKY SYMBOL
+        $date ?? date("Ymd"),					// DATUM
+        $vs ?? "",					// VARIABILNY SYMBOL
+        $ks ?? "",						// KONSTANTNY SYMBOL
+        $ss ?? "",						// SPECIFICKY SYMBOL
         '',
-        $note,					// POZNAMKA
+        $note ?? "",					// POZNAMKA
         '1',
         $iban,	// IBAN
         $swift,					// SWIFT
