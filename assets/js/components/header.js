@@ -1,4 +1,5 @@
-import Commons from "./commons.js"
+import Commons from "./commons.min.js"
+import {createApp, ref} from '../libs/vue/vue.min.js'
 
 class Header extends Commons {
 
@@ -8,10 +9,7 @@ class Header extends Commons {
     }
 
     init() {
-        let _Vue = Vue
-
-        new _Vue({
-            el: '#header',
+        const app = createApp({
             data: {
                 isOpened: false,
                 scrollPosition: 0,
@@ -33,7 +31,7 @@ class Header extends Commons {
                     return this.scrollPosition > 50
                 }
             },
-        });
+        }).mount("#header");
     }
 }
 
