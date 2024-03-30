@@ -36,11 +36,9 @@
     }
   }
 
-  @media(hover: hover) {
-    &:hover {
+  @include hover() {
       .icon {
         background: $primaryRedHovered;
-      }
     }
   }
 

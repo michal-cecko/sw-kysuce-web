@@ -1,72 +1,81 @@
-import Commons from "./commons.js"
+import { ref, onMounted } from 'vue';
+import Commons from "./commons.min.js";
+import { createApp } from '../libs/vue/vue.min.js';
 
 class Events extends Commons {
     constructor() {
-        super()
+        super();
 
-        this.init()
+        this.init();
 
-        console.log("Events component initializing...")
+        console.log("Events component initializing...");
     }
 
     init() {
-        let _thisClass = this
+        const activeYear = ref(false);
+        const postsContent = ref("");
+        const loading = ref(false);
+        const years = ref([]);
 
-        new Vue({
-            el: '#events',
-            components: {},
-            data: {
-                activeYear: false,
-                postsContent: "",
-                loading: false,
-                years: [],
-            },
-            created() {
-                this.years = document.getElementById("pastEventsData")?.dataset?.years.split(",")
-                console.log("Events component created.")
-            },
-            async mounted() {
-                await this.fetchContent(this.years[0])
-            },
-            methods: {
-                async fetchContent(year) {
-                    if(this.activeYear === year) return
+        const loadPosts = async (moreParams = {}) => {
+            loading.value = true;
 
-                    this.activeYear = year
-                    let data = await this.loadPosts({
-                        year: this.activeYear,
-                    })
-                    this.postsContent = data.content
-                },
+            let params = {
+                action: "get_events_by_year",
+                nonce: this.nonce,
+            };
 
-                async loadPosts(moreParams = {}) {
-                    this.loading = true;
+            if (!this.empty(moreParams)) {
+                params = {...params, ...moreParams};
+            }
 
-                    let params = {
-                        action: "get_events_by_year",
-                        nonce: _thisClass.nonce,
-                    };
+            let posts = [];
+            await fetch(this.addParamsToUrl(params, this.ajaxURL))
+                .then(response => response.json())
+                .then(response => {
+                    posts = response;
+                });
 
-                    if (!_thisClass.empty(moreParams)) {
-                        params = {...params, ...moreParams}
-                    }
+            loading.value = false;
 
-                    let posts = []
-                    await fetch(_thisClass.addParamsToUrl(params, _thisClass.ajaxURL))
-                        .then(response => response.json())
-                        .then(response => {
-                            posts = response
-                        })
+            return posts;
+        };
 
-                    this.loading = false;
+        onMounted(async () => {
+            years.value = document.getElementById("pastEventsData")?.dataset?.years.split(",");
+            await fetchContent(years.value[0]);
 
-                    return posts;
-                },
-            },
+            refreshFsLightbox();
         });
+
+        const fetchContent = async (year) => {
+            if (activeYear.value === year) return;
+
+            activeYear.value = year;
+            const data = await loadPosts({
+                year: activeYear.value,
+            });
+            postsContent.value = data.content;
+        };
+
+        const app = createApp({
+            setup() {
+                onMounted(() => {
+                    console.log("Events component created.");
+                });
+
+                return {
+                    activeYear,
+                    postsContent,
+                    loading,
+                    years,
+                    fetchContent
+                };
+            },
+        }).mount("#events");
     }
 }
 
-new Events()
+new Events();
 
-export {}
+export {};

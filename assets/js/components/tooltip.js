@@ -1,4 +1,4 @@
-import Commons from "./commons.js"
+import Commons from "./commons.min.js"
 
 class Tooltip extends Commons {
 
@@ -13,7 +13,6 @@ class Tooltip extends Commons {
                 let tooltipContainers = document.querySelectorAll(".tooltip-container");
                 tooltipContainers.forEach(function (tooltipContainer) {
                     tooltipContainer.addEventListener("click", function () {
-                        console.log("clicked")
                         tooltipContainer.classList.toggle("active");
                     })
                 })

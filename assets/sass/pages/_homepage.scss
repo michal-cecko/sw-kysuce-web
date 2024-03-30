@@ -88,6 +88,8 @@
     }
 
     .news-container {
+      max-width: 17.35rem;
+
       .card {
         border-bottom: 1px solid $secondaryWhite;
         padding: 32px 0;
@@ -222,7 +224,7 @@
       max-width: 37rem;
       height: 30vh;
       margin-left: auto;
-      max-height: 14rem;
+      max-height: 17rem;
 
       img {
         width: 100%;

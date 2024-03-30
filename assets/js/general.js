@@ -1,45 +1,73 @@
-import Commons from "./components/commons.js";
+import Commons from "./components/commons.min.js";
 
 console.log("General JS has been loaded.")
 
-class General extends Commons{
+class General extends Commons {
     constructor() {
         super()
 
         this._prepareSwipers()
         this._prepareSlicks()
         this._prepareSmoothScrolling()
+        this._prepareCopyToClipboard()
+        this._prepareGutenbergGalleries()
+
+        setTimeout(() => {
+            refreshFsLightbox();
+        }, 100)
     }
 
     _prepareSwipers() {
-        if(document.querySelector(".swiper-latest-events")) {
-            const swiperLatestEvents = new Swiper('.swiper-latest-events', {
-                slidesPerView: 1.4,
-                spaceBetween: 20,
-                navigation: {
-                    nextEl: '.event-arrow.next',
-                    prevEl: '.event-arrow.prev'
+
+        this.createSwiper(".swiper-sponsors", {
+            slidesPerView: 3.25,
+            spaceBetween: 16,
+            navigation: false,
+            breakpoints: {
+                768: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 4,
+                    spaceBetween: 16,
                 },
-                breakpoints: {
-                    768: {
-                        slidesPerView: 2.2,
-                        spaceBetween: 20,
-                    },
-                    1024: {
-                        slidesPerView: 2.7,
-                        spaceBetween: 20,
-                    },
-                }
-            });
-        }
+                1000: {
+                    slidesPerView: 5,
+                    spaceBetween: 24,
+                    slidesPerGroup: 5,
+                },
+                1400: {
+                    slidesPerView: 6,
+                    slidesPerGroup: 6,
+                    spaceBetween: 32,
+                },
+            }
+        })
+
+        this.createSwiper(".swiper-latest-events", {
+            slidesPerView: 1.4,
+            spaceBetween: 20,
+            navigation: {
+                nextEl: '.event-arrow.next',
+                prevEl: '.event-arrow.prev'
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2.2,
+                    spaceBetween: 20,
+                },
+                1024: {
+                    slidesPerView: 2.7,
+                    spaceBetween: 20,
+                },
+            }
+        })
     }
 
     _prepareSlicks() {
-         jQuery(document).ready(function () {
+        jQuery(document).ready(function () {
             let slider = jQuery('.slick-highlights');
             let prevArrow = document.querySelector('#blogHighlights .slick-arrow.prev');
             let nextArrow = document.querySelector('#blogHighlights .slick-arrow.next');
-            if(slider.length) {
+            if (slider.length) {
                 const slickOptions = {
                     centerMode: true,
                     centerPadding: '30px',
@@ -68,7 +96,7 @@ class General extends Commons{
         })
     }
 
-    prepareCopyToClipboard() {
+    _prepareCopyToClipboard() {
         let _thisClass = this
 
         function fallbackCopyTextToClipboard(text) {
@@ -122,12 +150,12 @@ class General extends Commons{
 
         for (let item of anchorlinks) {
             console.log(item)
-            item.addEventListener('click', (e)=> {
+            item.addEventListener('click', (e) => {
                 let hashval = item.getAttribute('href')
-                if(!hashval.length) return;
+                if (!hashval.length) return;
 
                 let target = document.querySelector(hashval)
-                if(!target) return;
+                if (!target) return;
 
                 target.scrollIntoView({
                     behavior: 'smooth',
@@ -137,6 +165,38 @@ class General extends Commons{
                 e.preventDefault()
             })
         }
+    }
+
+
+    _prepareGutenbergGalleries() {
+        let galleries = document.querySelectorAll(".wp-block-image");
+
+        galleries.forEach(gallery => {
+            let images = gallery.querySelectorAll("img");
+            if (images.length) {
+                images.forEach(image => {
+                    this.setImageLightbox(image, `gallery`)
+                })
+            }
+        })
+    }
+
+
+    setImageLightbox(imageNode, galleryName) {
+        let anchorElement = document.createElement('a');
+        anchorElement.setAttribute('href', imageNode.src);
+        anchorElement.setAttribute('data-fslightbox', galleryName);
+        let clonedImg = imageNode.cloneNode(true);
+        anchorElement.appendChild(clonedImg);
+        imageNode.parentNode.replaceChild(anchorElement, imageNode);
+    }
+
+
+    createSwiper(selector, options) {
+        let node = document.querySelector(selector);
+        if (!node) return;
+
+        const swiper = new Swiper(selector, options);
     }
 }
 

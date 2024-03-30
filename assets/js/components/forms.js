@@ -1,8 +1,11 @@
-import Commons from "./commons.js"
+import Commons from "./commons.min.js"
+import EventBus from "./eventbus.min.js"
+import { createApp, ref, onMounted, watch } from '../libs/vue/vue.min.js';
 
 export default class Forms extends Commons {
     constructor() {
         super();
+        this.files = {}
     }
 
     async WPPostAjax(body) {
@@ -24,26 +27,31 @@ export default class Forms extends Commons {
         element.addEventListener('click-outside', callback);
     }
 
-    checkFile(file, allowedFileTypes = []) {
+    checkFile(file, field) {
+        let allowedFileTypes = field.dataset.allowed_types?.replaceAll(" ", "").split(",").filter(type => type.trim() !== "");
         let fileName = file.name;
-        let allow = 0;
+        let isValid;
 
         //check extension
-        if (allowedFileTypes.length) {
-            allow = true
+        if (!allowedFileTypes.length) {
+            isValid = true
         } else {
-            allowedFileTypes.forEach((ext) => {
-                if (fileName.endsWith(ext.toLowerCase())) allow = true;
+            isValid = "Nepovolený typ súboru.";
+            allowedFileTypes.every((ext) => {
+                if (fileName.toLowerCase().endsWith(ext.toLowerCase())) {
+                    isValid = true;
+                }
             })
         }
+        if (isValid !== true) return isValid;
 
         //check max filesize
         const maxFileSize = 2 * 1024 * 1024; // 2 MB in bytes
         if (file && file.size > maxFileSize) {
-            allow = 1;
+            isValid = "Maximálna veľkosť súboru je 2MB.";
         }
 
-        return allow;
+        return isValid;
     }
 
     checkCaptcha() {
@@ -63,11 +71,11 @@ export default class Forms extends Commons {
         let fields = form.querySelectorAll(".form-field-container")
         fields.forEach(field => {
             field.classList.remove("filled", "focused")
-            if (field.classList.contains("custom-select")) {
-                field.classList.remove("opened")
+            if (field.classList?.contains("custom-select")) {
+                field.classList?.remove("opened")
                 field.querySelector(".form-field").value = ""
                 field.querySelector(".selected-values").innerHTML = ""
-                field.querySelector(".option.selected").classList.remove("selected");
+                field.querySelector(".option.selected")?.classList?.remove("selected");
             } else if (field.classList.contains("checkboxes-container")) {
                 let cbs = field.querySelectorAll(".form-field")
                 cbs.forEach(cb => {
@@ -129,7 +137,7 @@ export default class Forms extends Commons {
                         let input = field.querySelector(".form-field");
                         let defaultValue = input.dataset?.default;
 
-                        if(defaultValue?.length) {
+                        if (defaultValue?.length) {
                             field.classList.add(filledClass, focusedClass);
                             defaultValues[input.name] = defaultValue
                         }
@@ -163,48 +171,57 @@ export default class Forms extends Commons {
                     else if (field.classList.contains("custom-select")) {
                         let focusTarget = field.querySelector(".selected-values");
                         let hiddenInputOfSelect = field.querySelector("input");
-                        let options = field.querySelectorAll(".options .option");
+                        let optionsContainerClass = 'options';
+                        let options = field.querySelectorAll(`.${optionsContainerClass} .option`);
                         let isMultiple = field.classList.contains("multiple");
                         let openedOptionsClass = "opened";
                         let selectedOptionClass = "selected";
                         let defaults = hiddenInputOfSelect.dataset?.default?.split("###")
                         defaults = defaults.length ? defaults : [];
-                        if(!isMultiple && defaults.length > 1) defaults = defaults[0]
+                        if (!isMultiple && defaults.length > 1) defaults = defaults[0]
+                        if (!isMultiple && Array.isArray(defaults) && defaults.length) defaults = defaults[0]
                         defaultValues[hiddenInputOfSelect.id] = defaults
 
-                        const hasValue = function () {
+                        const isEmpty = function () {
                             return hiddenInputOfSelect.value === "" || hiddenInputOfSelect.value === "[]";
                         }
 
-                        field.addEventListener('click', function () {
+                        const hideFieldOptions = (fieldToHide) => {
+                            if (!fieldToHide.classList.contains(filledClass))
+                                fieldToHide.classList.remove(focusedClass)
+
+                            fieldToHide.classList.remove(openedOptionsClass)
+                        }
+
+                        field.addEventListener('click', function (e) {
+                            if (e.target.closest(`.${optionsContainerClass}`)) {
+                                return
+                            }
+
                             field.classList.add(focusedClass, openedOptionsClass)
                         });
 
                         _thisClass.addClickOutsideListener(field, function () {
-                            if (!field.classList.contains(filledClass))
-                                field.classList.remove(focusedClass)
-
-                            field.classList.remove(openedOptionsClass)
+                            hideFieldOptions(field)
                         })
 
                         hiddenInputOfSelect.addEventListener('change', function () {
-                            if (!hasValue) {
+                            if (isEmpty()) {
                                 field.classList.remove(filledClass)
                             } else {
                                 field.classList.add(filledClass)
                             }
                         });
 
-                        if(defaults.length) {
+                        if (defaults.length) {
                             field.classList.add(filledClass)
-                            if(isMultiple){
+                            if (isMultiple) {
                                 _thisClass.setMultipleSelectOptionsHTML(defaults, focusTarget, hiddenInputOfSelect);
                             } else {
-                                let value = defaults[0]
-                                _thisClass.setSingularSelectOptionHTML(value, focusTarget, hiddenInputOfSelect, field, openedOptionsClass);
+                                _thisClass.setSingularSelectOptionHTML(defaults, focusTarget, hiddenInputOfSelect, field, openedOptionsClass);
                             }
                         }
-                        
+
                         options.forEach(option => {
 
                             if (defaults?.indexOf(option.dataset.value) !== -1) {
@@ -212,6 +229,7 @@ export default class Forms extends Commons {
                             }
 
                             option.addEventListener("click", function () {
+
                                 if (isMultiple) {
                                     option.classList.toggle(selectedOptionClass);
 
@@ -247,17 +265,21 @@ export default class Forms extends Commons {
                     let fieldID = field.dataset.id;
 
                     checkboxes.forEach(cb => {
-                        if(cb.checked) defaults.push(cb.value)
+                        if (cb.checked) {
+                            if (multiple) {
+                                defaults.push(cb.value)
+                            } else {
+                                defaults = cb.value
+                            }
+                        }
 
                         cb.addEventListener("change", function () {
-                            let parent = cb.closest(".checkboxes")
-                            let cbsInGroup = parent.querySelectorAll("input");
                             if (!multiple) {
                                 if (!cb.checked) {
                                     cb.checked = true
                                     return;
                                 }
-                                cbsInGroup.forEach(cbCheck => {
+                                checkboxes.forEach(cbCheck => {
                                     if (cbCheck !== cb) {
                                         cbCheck.checked = false
                                     }
@@ -274,7 +296,6 @@ export default class Forms extends Commons {
                 else {
                     if (field.classList.contains("is-file-input")) {
                         let input = field.querySelector("input")
-                        let supports = field.dataset.allowed_types
 
                         field.addEventListener("dragover", function (e) {
                             e.preventDefault();
@@ -299,49 +320,65 @@ export default class Forms extends Commons {
                             }
                         });
 
-                        field.addEventListener("drop", function (e) {
+                        // Add event listener for drop and change events
+                        field.addEventListener("drop", handleDrop);
+                        input.addEventListener("change", handleFileInputChange);
+
+// Function to handle drop event
+                        function handleDrop(e) {
                             e.stopPropagation();
                             e.preventDefault();
 
-                            let dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer; // Get the dataTransfer object
+                            let dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
                             let file = dataTransfer.files[0];
 
-                            updateFieldStatus(file)
+                            processFile(file);
+                        }
 
-                            let reader = new FileReader();
-                            reader.onload = function () {
-                                console.log(input.value)
-                            };
-                            reader.readAsDataURL(file);
-                        })
-
-                        input.addEventListener("change", function (e) {
+// Function to handle file input change event
+                        function handleFileInputChange(e) {
                             let files = e.target.files;
-                            let validFiles = [];
+                            processFile(files[0]);
+                        }
 
-                            for (let i = 0; i < files.length; i++) {
-                                let file = files[i];
-                                let filecheck = _thisClass.checkFile(file, supports.replaceAll(" ", "").split(","));
-                                if (filecheck === true) {
-                                    validFiles.push(file);
-                                }
-                            }
+// Function to process the file
+                        function processFile(file) {
+                            let reader = new FileReader();
+                            reader.readAsDataURL(file);
 
-                            if (validFiles.length > 0) {
+                            handleFileUpload(file);
+                        }
+
+// Function to check files
+                        function handleFileUpload(file) {
+                            let {validFiles, invalidFiles, isValid} = _thisClass.validateFiles([file], field);
+
+                            if (isValid) {
+                                EventBus.emit("files-uploaded", {files: file, id: input.id});
+                                if(!_thisClass.files[input.id]) _thisClass.files[input.id] = []
+                                _thisClass.files[input.id]?.push(file)
                                 updateFieldStatus(validFiles);
-                            } else {
-                                infoText.innerHTML = "Chyba! Niektorý z týchto typov súborov <span>nie je povolený</span> alebo žiadne súbory nespĺňajú požiadavky.";
-                                infoText.classList.add("error");
-                                infoText.classList.remove("success");
-                                input.value = ""; // Clear the input field on error
-                                dropHereText.classList.add("d-none");
-                                dragDropText.classList.remove("d-none");
+                                return;
                             }
-                        });
 
-                        let uploadedFilesCount = 0; // To store the count of uploaded files
+                            let text = "";
+                            invalidFiles.forEach(error => {
+                                text += "<span>" + error.name + "</span>: " + error.error + "<br>";
+                            });
+                            infoText.innerHTML = text;
+                            _thisClass.notify(text, "error");
+                            infoText.classList.add("error");
+                            infoText.classList.remove("success");
+                            input.value = ""; // Clear the input field on error
+                            dropHereText.classList.add("d-none");
+                            dragDropText.classList.remove("d-none");
+                        }
+
+                        let uploadedFilesCount = 0;
 
                         function updateFieldStatus(files) {
+                            _thisClass.notify("Súbor bol úspešne nahraný.")
+
                             infoText.classList.add("success");
                             uploadedFilesCount = files.length; // Set the count of uploaded files
                             updateUploadedFilesCount(); // Update the displayed count
@@ -384,30 +421,66 @@ export default class Forms extends Commons {
         hiddenInputOfSelect.value = JSON.stringify(selectedValues)
     }
 
-    validateFormFields(fieldNodes) {
+    validateFormFields(inputNodes) {
+        let thisClass = this;
         let fields = {}
         let errors = {}
 
-        fieldNodes.forEach(field => {
-            let container = field.closest(".form-field-container")
-            let fieldName = container.dataset.name
-            let isRequired = container.classList.contains("required");
-            let isFile = container.classList.contains("is-file-input");
+        inputNodes.forEach(input => {
+            let field = input.closest(".form-field-container")
+            let fieldName = field.dataset.name
+            let isRequired = field.classList.contains("required");
+            let isFile = field.classList.contains("is-file-input");
 
-            if (!isFile && isRequired && this.empty(field.value)) {
-                errors[field.id] = "Pole " + fieldName + " musíte vyplniť."
-            } else if (field.type === "email" && !this.validateEmail(field.value)) {
-                errors[field.id] = "Pole " + fieldName + " musí mať správny tvar emailu."
+            if (!isFile && isRequired && this.empty(input.value)) {
+                errors[input.id] = "Pole " + fieldName + " musíte vyplniť."
+            } else if (input.type === "email" && !this.validateEmail(input.value)) {
+                errors[input.id] = "Pole " + fieldName + " musí mať správny tvar emailu."
             } else if (isFile) {
-                if (field.files.length) {
-                    fields[field.id] = field.files[0]
-                } else if (isRequired) {
-                    errors[field.id] = "Nahrajte prosím súbor do poľa " + fieldName + "."
+                let files = input.files
+                if(!files.length) {
+                    files = thisClass.files[input.id] || []
+                }
+                console.log(files, thisClass.files, input.id)
+                if (isRequired && !files.length) {
+                    errors[input.id] = "Nahrajte prosím súbor do poľa " + fieldName + "."
+                } else if (files.length && thisClass.validateFiles(files, field)?.isValid !== true) {
+                    errors[input.id] = "Pole " + fieldName + " obsahuje nesprávny súbor."
+                } else {
+                    fields[input.id] = input.files[0]
                 }
             }
         })
 
         return {fields: fields, errors: errors}
+    }
+
+    validateFiles(files, field) {
+        let thisClass = this;
+        let validFiles = [];
+        let invalidFiles = [];
+        let isValid = true;
+
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            console.log(file);
+            let fileCheck = thisClass.checkFile(file, field);
+            if (fileCheck === true) {
+                validFiles.push(file);
+            } else {
+                isValid = false;
+                invalidFiles.push({
+                    name: file.name,
+                    error: fileCheck
+                })
+            }
+        }
+
+        if (!validFiles.length) {
+            isValid = false;
+        }
+
+        return {validFiles, invalidFiles, isValid}
     }
 
     validateEmail(email) {

@@ -14,7 +14,7 @@ function create_post_types()
         'name' => __('Podujatia', 'swslovakia'),
         'singular_name' => __('Podujatie', 'swslovakia'),
         'add_new' => __('Pridať nové podujatie', 'swslovakia'),
-        'add_new_item' => __('Pridať nové podujatie', 'swslovakia'),
+        'add_new_item' => __('Pridať nové podujatie', 'ňswslovakia'),
         'edit_item' => __('Upraviť podujatie', 'swslovakia'),
         'new_item' => __('Nové podujatie', 'swslovakia'),
         'view_item' => __('Otvoriť podujatie', 'swslovakia'),
@@ -25,6 +25,8 @@ function create_post_types()
 
     $supports = array(
         'title',
+        'editor',
+        'thumbnail'
     );
 
     $args = array(
@@ -83,6 +85,62 @@ function create_post_types()
 
 
     //-----------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+    /*
+     * SPONZORI ---- START
+     */
+
+    $labels = array(
+        'name' => __('Sponzori', 'swslovakia'),
+        'singular_name' => __('Sponzor', 'swslovakia'),
+        'add_new' => __('Pridať nových sponzorov', 'swslovakia'),
+        'add_new_item' => __('Pridať nového sponzora', 'swslovakia'),
+        'edit_item' => __('Upraviť sponzora', 'swslovakia'),
+        'new_item' => __('Nový sponzor', 'swslovakia'),
+        'view_item' => __('Otvoriť sponzora', 'swslovakia'),
+        'search_items' => __('Hľadať sponzora', 'swslovakia'),
+        'not_found' => __('Sponzor nebol nájdený', 'swslovakia'),
+        'not_found_in_trash' => __('Sponzor nebol nájdený v koši', 'swslovakia')
+    );
+
+    $supports = array(
+        'title',
+    );
+
+    $args = array(
+        'labels' => $labels,
+        'supports' => $supports,
+        'public' => TRUE,
+        'has_archive' => FALSE,
+        'show_in_rest' => TRUE,
+        'taxonomy' => [],
+        'menu_icon' => 'dashicons-money-alt',
+    );
+
+    register_post_type('sponsor', $args);
+
+    /*
+     * SPONZORI ---- END
+     */
+
+
+
+    //-----------------------------------------------------------------------------------------
+
+
+
+
+
+
+
 }
 
 add_action('init', 'create_post_types');

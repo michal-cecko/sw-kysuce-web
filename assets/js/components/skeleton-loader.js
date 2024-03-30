@@ -1,4 +1,4 @@
-import Commons from "./commons.js"
+import Commons from "./commons.min.js"
 
 export default class extends Commons {
     constructor() {

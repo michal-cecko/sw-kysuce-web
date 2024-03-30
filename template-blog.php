@@ -9,13 +9,12 @@ $args = [
     'posts_per_page' => -1,
     'post_status' => 'publish',
     'post_type' => 'post',
-    'ignore_sticky_posts' => 1,
     'post__in' => $stickyPosts
 ];
 
 $highlights = new WP_Query($args);
 
-$categories = get_categories(['hide_empty' => false, 'exclude' => [1]])
+$categories = get_categories(['hide_empty' => true, 'exclude' => [1]])
 
 ?>
     <div id="blogdata" data-post_type="post"></div>

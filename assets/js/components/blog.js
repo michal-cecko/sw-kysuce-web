@@ -1,132 +1,137 @@
-import Commons from "./commons.js"
-import Pagination from "./pagination.js"
+import { createApp, ref, onMounted } from '../libs/vue/vue.min.js'
+import Pagination from "./pagination.min.js"
+import Commons from "./commons.min.js"
 
 class Blog extends Commons {
     constructor() {
         super()
-
         this.init()
-
         console.log("Blog component initializing...")
     }
 
     init() {
-        let _thisClass = this
+        let activeCategory = ref(false)
+        let postsContent = ref("")
+        let loading = ref(false)
+        let currentPage = ref(1)
+        let postsPerPage = ref(6)
+        let pagination = ref({})
+        let loadMoreVisible = ref(false)
+        let blogData = ref({})
 
-        new Vue({
+        blogData.value = document.getElementById("blogdata").dataset
+
+        const fetchContent = async (catID) => {
+            activeCategory.value = catID
+            loading.value = true
+
+            const data = await loadPosts({
+                posts_per_page: postsPerPage.value,
+                category: activeCategory.value,
+                page: currentPage.value
+            })
+
+            postsContent.value = data.content
+            pagination.value = data.pagination
+            checkLoadMoreVisibility()
+            loading.value = false
+        }
+
+        const changePage = async (page) => {
+            if (currentPage.value === page || (!this.empty(pagination.value.total_pages) && pagination.value.total_pages < page) || page < 1) return
+            currentPage.value = page
+            await fetchContent(activeCategory.value)
+        }
+
+        const loadPosts = async (moreParams = {}) => {
+            const params = {
+                post_type: blogData.value.post_type,
+                action: "get_posts",
+                nonce: this.nonce,
+                ...moreParams
+            }
+
+            let posts = []
+            await fetch(this.addParamsToUrl(params, this.ajaxURL))
+                .then(response => response.json())
+                .then(response => {
+                    posts = response
+                })
+
+            return posts
+        }
+
+        const checkLoadMoreVisibility = () => {
+            loadMoreVisible.value = pagination.value.total_pages > currentPage.value
+        }
+
+        const printNumber = (number) => {
+            number = parseInt(number)
+            return `<div class="number ${currentPage.value === number ? 'active' : ''}" data-number="${number}">${number}</div>`
+        }
+
+        const printNumbers = (from, to) => {
+            let html = ""
+            for (let i = from; i <= to; i++) {
+                html += printNumber(i)
+            }
+            return html
+        }
+
+        const numbersHTML = () => {
+            if (this.empty(pagination.value)) return
+
+            let pages = pagination.value.total_pages
+            let page = currentPage.value
+
+            if (pages < 6) {
+                return printNumbers(1, pages)
+            } else {
+                if (page < 3) {
+                    return printNumbers(1, pages)
+                } else if (page > pages - 2) {
+                    return printNumbers(pages - 4, pages)
+                } else {
+                    return printNumbers(page - 2, page + 2)
+                }
+            }
+        }
+
+        createApp({
             el: '#blog',
             components: { Pagination },
-            data: {
-                activeCategory: false,
-                postsContent: "",
-                loading: false,
-                currentPage: 1,
-                postsPerPage: 6,
-                pagination: {},
-                loadMoreVisible: false,
-                blogData: {},
-            },
-            created() {
-                console.log("Blog component created.")
-            },
-            async mounted() {
-                this.blogData = document.getElementById("blogdata").dataset
+            setup() {
 
-                await this.fetchContent(-1)
+                onMounted(() => {
+                    let el = document.querySelector('.pagination');
+                    el?.addEventListener('page-change', async (event) => {
+                        await changePage(event.detail.page);
 
-                let _this = this;
-
-                this.$nextTick(() => {
-                    let el = this.$el.querySelector('.pagination');
-                    el?.addEventListener('page-change', function (event) {
-                        _this.changePage(event.detail.page);
+                        refreshFsLightbox();
                     });
-                });
-            },
-            methods: {
-                async fetchContent(catID) {
-                    this.activeCategory = catID
-                    let data = await this.loadPosts({
-                        posts_per_page: this.postsPerPage,
-                        category: this.activeCategory,
-                        page: this.currentPage
-                    })
-                    console.log(data)
-                    this.postsContent = data.content
-                    this.pagination = data.pagination
-                    this.checkLoadMoreVisibility()
-                },
+                })
 
-                async changePage(page) {
-                    if (this.currentPage === page || (!_thisClass.empty(this.pagination.total_pages) && this.pagination.total_pages < page) || page < 1) return;
-                    this.currentPage = page;
-                    await this.fetchContent(this.activeCategory)
-                },
+                fetchContent(-1)
 
-                async loadPosts(moreParams = {}) {
-                    this.loading = true;
-
-                    console.log(this.blogData.post_type)
-
-                    let params = {
-                        post_type: this.blogData.post_type,
-                        action: "get_posts",
-                        nonce: _thisClass.nonce,
-                    };
-
-                    if (!_thisClass.empty(moreParams)) {
-                        params = {...params, ...moreParams}
-                    }
-
-                    let posts = []
-                    await fetch(_thisClass.addParamsToUrl(params, _thisClass.ajaxURL))
-                        .then(response => response.json())
-                        .then(response => {
-                            posts = response
-                        })
-
-                    this.loading = false;
-
-                    return posts;
-                },
-
-                checkLoadMoreVisibility() {
-                    this.loadMoreVisible = this.pagination.total_pages > this.currentPage;
-                },
-
-                printNumber(number) {
-                    number = parseInt(number)
-                    return `<div class="number ${this.currentPage === number ? 'active' : ''}" data-number="${number}">${number}</div>`;
-                },
-
-                printNumbers(from, to) {
-                    let html = ""
-                    for (let i = from; i <= to; i++) {
-                        html += this.printNumber(i)
-                    }
-                    return html
-                },
-
-                numbersHTML() {
-                    if(_thisClass.empty(this.pagination)) return;
-
-                    let pages = this.pagination.total_pages;
-                    let page = this.currentPage;
-
-                    if(pages < 6) {
-                        return this.printNumbers(1, pages);
-                    } else {
-                        if(page < 3) {
-                            return this.printNumbers(1, pages);
-                        } else if(page > pages - 2) {
-                            return this.printNumbers(pages - 4, pages);
-                        } else {
-                            return this.printNumbers(page - 2, page + 2);
-                        }
-                    }
+                return {
+                    activeCategory,
+                    postsContent,
+                    loading,
+                    currentPage,
+                    postsPerPage,
+                    pagination,
+                    loadMoreVisible,
+                    blogData,
+                    fetchContent,
+                    changePage,
+                    loadPosts,
+                    checkLoadMoreVisibility,
+                    printNumber,
+                    printNumbers,
+                    numbersHTML
                 }
-            },
-        });
+            }
+        }).mount("#blog")
     }
 }
 

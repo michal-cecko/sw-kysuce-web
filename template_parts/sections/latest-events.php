@@ -34,7 +34,7 @@ $events = new WP_Query($args);
             </div>
             <div class="events-container col-md-7">
                 <div class="swiper swiper-latest-events">
-                    <div class="swiper-wrapper">
+                    <div class="swiper-wrapper swiper-loading">
                         <?php while ($events->have_posts()) : $events->the_post() ?>
                             <?php $article = get_field("event_article_link"); ?>
                             <div class="swiper-slide">

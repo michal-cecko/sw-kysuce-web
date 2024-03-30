@@ -1,3 +1,8 @@
+.swiper:not(.swiper-initialized) {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 .slider-arrows{
   display: flex;
   align-items: center;
@@ -26,7 +31,7 @@
     }
   }
 
-  @media(hover: hover) {
+  @include hover() {
     &:not(.swiper-button-disabled):hover {
       background: rgba($primaryBlack, 1);
 

@@ -20,3 +20,9 @@ include "functions/functions_userroles.php";
 include "functions/functions_playgrounds.php";
 
 include "functions/functions_qrcodes.php";
+
+include "functions/functions_calendar.php";
+
+include "functions/functions_rest.php";
+
+include "functions/functions_attachments.php";

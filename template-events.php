@@ -15,6 +15,9 @@ $args = [
             'type' => 'DATE'
         ]
     ],
+    'orderby' => 'meta_value',
+    'meta_key' => 'event_start',
+    'order' => 'ASC'
 ];
 $upcomingEvents = new WP_Query($args);
 ?>
@@ -28,7 +31,7 @@ $upcomingEvents = new WP_Query($args);
                 <span class="bg-text"><?= date("Y") ?></span>
                 <div class="text-container">
                     <h1 class="intro-heading">
-                        <?= __("Plán podujatí asociácie", "swslovakia") ?>
+                        <?= __("Plán podujatí združenia", "swslovakia") ?>
                         <span class="labelled-text red big d-none d-md-inline-block">
                             <span><?= __("Streetworkout Slovakia", "swslovakia") ?></span>
                         </span>
@@ -87,6 +90,7 @@ $upcomingEvents = new WP_Query($args);
 
         <?php
         // Set up the query arguments
+        $year = date("Y");
         $args = [
             'post_type' => 'event',
             'posts_per_page' => -1,
@@ -95,10 +99,19 @@ $upcomingEvents = new WP_Query($args);
             'orderby' => 'meta_value',
             'order' => 'DESC',
             'meta_query' => [
+                "relation" => "AND",
                 [
                     'key' => 'event_start',
-                    'compare' => 'EXISTS',
+                    'value' => [$year . '-01-01', $year . '-12-31'],
+                    'compare' => 'BETWEEN',
+                    'type' => 'DATE',
                 ],
+                [
+                    'key' => 'event_start',
+                    'value' => date('Y-m-d'),
+                    'compare' => '<',
+                    'type' => 'DATE'
+                ]
             ],
         ];
 

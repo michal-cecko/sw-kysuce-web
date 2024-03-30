@@ -17,7 +17,8 @@ function sw_get_posts()
     ];
 
     if($postType === 'post') {
-        $args['post__not_in'] = get_option('sticky_posts');
+        //TODO later remove
+        //$args['post__not_in'] = get_option('sticky_posts');
     }
 
     //Fetch main from category

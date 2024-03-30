@@ -1,0 +1,23 @@
+#sponsors {
+  margin-top: 6rem;
+
+  .swiper-sponsors {
+    height: 13rem;
+
+    .sponsor {
+      &--logo {
+        img {
+          width: 100%;
+          height: auto;
+          transition: 0.5s ease all;
+          filter: grayscale(100%);
+        }
+        @include hover() {
+          img{
+            filter: grayscale(0%);
+          }
+        }
+      }
+    }
+  }
+}

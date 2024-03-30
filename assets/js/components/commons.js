@@ -48,16 +48,6 @@ export default class Commons {
         }, 3000);
     }
 
-    overwriteProps(objectSource, objectTarget) {
-        console.log(objectTarget)
-        for (let prop in objectSource) {
-            if(objectSource.hasOwnProperty(prop)) {
-                objectTarget[prop] = objectSource[prop]
-            }
-        }
-        return objectTarget
-    }
-
     waitForElementToDisplay(selector, callback, checkFrequencyInMs, timeoutInMs) {
         var startTimeInMs = Date.now();
         (function loopSearch() {

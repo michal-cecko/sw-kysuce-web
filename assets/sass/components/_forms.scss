@@ -2,6 +2,7 @@ $borderAndLabelColor: #838286;
 
 .form-field-container {
   position: relative;
+  margin-bottom: 20px;
 
   input,
   .selected-values,
@@ -46,6 +47,14 @@ $borderAndLabelColor: #838286;
       font-size: 1.15rem;
       color: $borderAndLabelColor;
 
+      > span {
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin-left: 0.45rem;
+        color: #c3c3c3;
+        font-size: 1rem;
+      }
+
       .arrow {
         margin-left: 0.5rem;
         transition: all 0.3s ease;
@@ -62,6 +71,10 @@ $borderAndLabelColor: #838286;
     > label {
       font-size: 0.75rem;
       top: 0;
+
+      > span {
+        font-size: 0.5rem;
+      }
 
       .arrow {
         opacity: 0;

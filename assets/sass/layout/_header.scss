@@ -57,7 +57,7 @@ header {
       }
 
       @include media-breakpoint-up(md) {
-        &.all-black{
+        &.all-black {
           svg {
             path {
               stroke: $primaryBlack;
@@ -79,10 +79,8 @@ header {
         height: 2.5rem;
       }
 
-      @media(hover: hover) {
-        &:hover {
-          transform: scale(1.05);
-        }
+      @include hover() {
+        transform: scale(1.05);
       }
     }
   }
@@ -124,12 +122,11 @@ header {
           }
         }
       }
+
       .contact-button {
         transform: scale(0.7);
-        @media(hover: hover) {
-          &:hover {
-            transform: scale(0.8);
-          }
+        @include hover() {
+          transform: scale(0.8);
         }
       }
     }
@@ -240,25 +237,30 @@ header {
           @include media-breakpoint-down(sm) {
             column-gap: 1.5rem;
           }
+
           li {
             a {
               color: $primaryWhite;
               font-size: 1.35rem;
             }
           }
-          .events-link{
+
+          .events-link {
             margin: 0 !important;
             padding: 0 !important;
             width: fit-content;
-            span{
+
+            span {
               font-size: 1.35rem;
               color: $primaryWhite !important;
             }
-            svg{
+
+            svg {
               display: none;
             }
           }
-          .contact-button{
+
+          .contact-button {
             display: none !important;
           }
         }
@@ -276,9 +278,9 @@ header {
         transform: translateY(0);
       }
 
-      &.sticky{
-        .events-link{
-          span{
+      &.sticky {
+        .events-link {
+          span {
             color: $primaryWhite !important;
           }
         }
@@ -288,26 +290,17 @@ header {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-#notifications{
+#notifications {
   position: fixed;
-  top: 5rem;
-  right: 3rem;
+  top: 7rem;
+  right: 5rem;
   display: flex;
   flex-direction: column;
   z-index: 3000;
   pointer-events: none;
   align-items: flex-end;
-  .notification{
+
+  .notification {
     font-family: $secondaryFont;
     padding: 0.7rem 1.5rem;
     color: white;
@@ -318,19 +311,23 @@ header {
     opacity: 0;
     max-width: 300px;
 
-    &:last-child{
+    &:last-child {
       margin-bottom: 0;
     }
-    &.success{
+
+    &.success {
       background: #2e912e;
     }
-    &.error{
+
+    &.error {
       background: #ec4747;
     }
-    &.warning{
+
+    &.warning {
       background: #ec9a47;
     }
-    &.shown{
+
+    &.shown {
       transform: translateX(0);
       opacity: 1;
     }

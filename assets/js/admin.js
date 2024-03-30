@@ -1,4 +1,4 @@
-import Commons from "./components/commons.js";
+import Commons from "./components/commons.min.js";
 
 class Admin extends Commons {
     constructor() {

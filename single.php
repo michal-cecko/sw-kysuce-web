@@ -47,12 +47,12 @@ $category = getPostCategory(get_the_ID());
 <!--   INTRO ----- END    -->
 
 
-<?php if (has_post_thumbnail()) : ?>
-<section id="thumbSection">
-    <a data-fslightbox="thumb" href="<?= get_the_post_thumbnail_url() ?>">
-        <img src="<?= get_the_post_thumbnail_url() ?>" alt="Thumbnail obrázok">
-    </a>
-</section>
+<?php if (has_post_thumbnail()) : $objectPosition = get_field("thumb_object_position") ?? "center"; ?>
+    <section id="thumbSection">
+        <a data-fslightbox="thumb" href="<?= get_the_post_thumbnail_url() ?>">
+            <img src="<?= get_the_post_thumbnail_url() ?>" style="object-position: <?= $objectPosition ?>" alt="Thumbnail obrázok">
+        </a>
+    </section>
 <?php endif ?>
 
 
@@ -61,10 +61,11 @@ $category = getPostCategory(get_the_ID());
     <div class="section-id" id="obsah-clanku"></div>
     <div class="article-container">
         <div class="content-wrapper">
-            <div class="content-container">
+            <div class="content-container gutenberg-content">
+                <h2><?php the_title(); ?></h2>
                 <?php the_content(); ?>
             </div>
-            <?php //get_template_part("template_parts/author_card", ['author' => get_the_author_meta("ID")]) ?>
+            <?php get_template_part("template_parts/blog/author_card", "", ['author' => get_post_field('post_author')]); ?>
         </div>
     </div>
 </section>

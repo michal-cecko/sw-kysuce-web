@@ -58,12 +58,10 @@
       align-items: center;
     }
 
-    @media(hover: hover) {
-      &:hover {
+    @include hover() {
         .info {
           @include openedTooltip();
         }
-      }
     }
   }
 

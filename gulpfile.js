@@ -8,42 +8,48 @@ let gulp = require('gulp'),
 
 sass.compiler = require('sass')
 
-gulp.task('minify', function () {
-    return gulp.src('dist/css/main.css')
-        .pipe(rename('main.min.css'))
-        .pipe(gulp.dest('dist/css/'))
+const SCSS_PATH = "assets/sass";
+const JS_PATH = "assets/js";
+const DIST_PATH = "dist";
+
+gulp.task('scripts', function () {
+    return gulp.src([`${JS_PATH}/**/*.js`, `!${JS_PATH}/libs/**/*.js`])
+        .pipe(uglify()) // Minify the JavaScript files
+        .pipe(rename({ suffix: '.min' })) // Rename them with .min suffix
+        .pipe(gulp.dest(`${DIST_PATH}/js`)); // Output the minified files to dist/js directory
 });
 
-gulp.task('scripts', function() {
-    return gulp.src(['assets/js/**/*.js', '!assets/js/**/*.min.js'])
-        .pipe(uglify())
-        .pipe(gulp.dest('dist/js/'))
+gulp.task('libs-scripts', function () {
+    return gulp.src([`${JS_PATH}/libs/**/*.js`])
+        .pipe(uglify()) // Minify the JavaScript files
+        .pipe(rename({ suffix: '.min' })) // Rename them with .min suffix
+        .pipe(gulp.dest(`${DIST_PATH}/js/libs`)); // Output the minified files to dist/js directory
 });
 
 gulp.task('sass', function () {
-    return gulp.src('assets/sass/main.scss')
+    return gulp.src(`${SCSS_PATH}/main.scss`)
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(sourcemaps.init())
         .pipe(autoprefixer())
         .pipe(sourcemaps.write())
         .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('dist/css/'))
+        .pipe(gulp.dest(`${DIST_PATH}/css`))
 });
 
 gulp.task('admin-sass', function () {
-    return gulp.src('assets/sass/admin/**/*.scss')
+    return gulp.src(`${SCSS_PATH}/admin/**/*.scss`)
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(sourcemaps.init())
         .pipe(autoprefixer())
         .pipe(sourcemaps.write())
         .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('dist/css/admin'))
+        .pipe(gulp.dest(`${DIST_PATH}/css/admin`))
 });
 
 gulp.task('assets:watch', function () {
-    gulp.watch(['assets/sass/**/*.scss', '!assets/sass/admin/**/*.scss'], gulp.series('sass'))
-    gulp.watch(['assets/sass/admin/**/*.scss'], gulp.series('admin-sass'))
-    gulp.watch('assets/js/**/*.js', gulp.series('scripts'))
+    gulp.watch([`${SCSS_PATH}/**/*.scss`, `!${SCSS_PATH}/admin/**/*.scss`], gulp.series('sass'))
+    gulp.watch([`${SCSS_PATH}/admin/**/*.scss`], gulp.series('admin-sass'))
+    gulp.watch(`${JS_PATH}/**/*.js`, gulp.series('scripts'))
 });
 
-gulp.task('production', gulp.series('sass', 'admin-sass', 'minify', 'scripts'))
+gulp.task('production', gulp.series('sass', 'admin-sass', 'scripts', 'libs-scripts'))

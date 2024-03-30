@@ -20,8 +20,8 @@ $args = [
     'post_type' => 'post',
 ];
 if ($reports->have_posts()) $args['post__not_in'] = wp_list_pluck($reports->posts, 'ID');
-$latestArticles = new WP_Query($args);
 
+$latestArticles = new WP_Query($args);
 $args = [
     'posts_per_page' => 1,
     'post_status' => 'publish',
@@ -79,7 +79,7 @@ $pinnedEvent = new WP_Query($args);
                         </span>
                         <?php $i = 0;
                         while ($latestArticles->have_posts() && $i < 2) : $latestArticles->the_post() ?>
-                            <a href="#" class="card">
+                            <a href="<?= get_the_permalink() ?>" class="card">
                                 <h2><?= get_the_title() ?></h2>
                                 <div class="dot-divided-info">
                                     <span><?= get_the_date("d. M Y") ?></span>
@@ -116,9 +116,9 @@ $pinnedEvent = new WP_Query($args);
                 </a>
                 <?php wp_reset_query(); endif ?>
             <?php if ($image = get_field("home_intro_image")) : ?>
-                <div class="image d-lg-block d-none">
+                <a class="image d-lg-block d-none" data-fslightbox="home-intro-lb" href="<?= $image ?>">
                     <img src="<?= $image ?>" alt="Intro obrázok">
-                </div>
+                </a>
             <?php endif ?>
         </div>
     </div>
@@ -128,9 +128,18 @@ $pinnedEvent = new WP_Query($args);
 <!--   INTRO SECTION ----- END    -->
 
 
+
+
+<!--  SPONSORS ---- START  -->
+
+<?php get_template_part("template_parts/sections/sponsors"); ?>
+
+<!--  SPONSORS ---- END  -->
+
+
+
+
 <!--   BLOG SECTION ----- START    -->
-
-
 <section id="blogSection">
     <div class="container">
         <div class="section-id" id="blog"></div>
@@ -141,8 +150,8 @@ $pinnedEvent = new WP_Query($args);
         <div class="blog-container row">
             <div class="first-article col-lg-6">
                 <?php $i = 0;
-                if ($latestArticles->have_posts()) :
-                    $latestArticles->the_post();
+                $latestArticles->rewind_posts();
+                if ($latestArticles->have_posts()) : $latestArticles->the_post();
                     get_template_part("template_parts/blog/article-card", "", [
                         'direction' => 'column',
                         'article' => get_post(),
@@ -213,7 +222,7 @@ $pinnedEvent = new WP_Query($args);
         <?php if ($reports->have_posts()) : ?>
             <div class="reports-container red-scrollbar">
                 <div class="row">
-                    <?php while ($latestArticles->have_posts()) : $latestArticles->the_post(); ?>
+                    <?php while ($reports->have_posts()) : $reports->the_post(); ?>
                         <div class="col-3">
                             <?php get_template_part("template_parts/blog/article-card", "", [
                                 'direction' => 'column',
@@ -268,7 +277,7 @@ $pinnedEvent = new WP_Query($args);
 
     <!--   LATEST EVENTS SECTION ----- START    -->
 
-    <?php get_template_part("template_parts/sections/latest-events"); ?>
+    <?php /*get_template_part("template_parts/sections/latest-events"); */ ?>
 
     <!--   LATEST EVENTS SECTION ----- END    -->
 

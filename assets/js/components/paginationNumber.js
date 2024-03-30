@@ -1,7 +1,7 @@
-export default Vue.component('PaginationNumber', {
-    template: `
-      <div class="number" :class="{ active: isActive }" @click="changePage(number)">{{ number }}</div>
-    `,
+import { defineComponent, ref } from '../libs/vue/vue.min.js'
+
+export default defineComponent({
+    name: 'PaginationNumber',
     props: {
         number: {
             type: Number,
@@ -12,9 +12,14 @@ export default Vue.component('PaginationNumber', {
             required: true
         }
     },
-    methods: {
-        changePage(number) {
-            this.$emit('page-change', number);
+    setup(props, { emit }) {
+        const changePage = () => {
+            emit('page-change', props.number);
         }
-    }
-})
+
+        return { changePage };
+    },
+    template: `
+      <div class="number" :class="{ active: isActive }" @click="changePage">{{ number }}</div>
+    `
+});

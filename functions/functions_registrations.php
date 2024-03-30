@@ -132,11 +132,12 @@ function sw_submit_register_form()
                     $nextID = intval($submission['id']) + 1;
                 }
             }
-            //TODO REMOVE LATER FALSE
-            if (false && $checkUniqueEmail) {
+
+            if ($checkUniqueEmail) {
                 foreach ($submission as $field => $value) {
                     if (str_contains($field, "email") && $value == $fields[$field]) {
-                        wp_send_json_error("Tento email už je zaregistrovaný na tento event. (#2)");
+                        //TODO later remove
+                        //wp_send_json_error("Tento email už je zaregistrovaný na tento event. (#2)");
                     }
                 }
             }
@@ -178,7 +179,7 @@ function sw_submit_register_form()
             wp_send_json_error("Nepodarilo sa odoslať registračný email. Prosím skúste to neskôr.");
         }
 
-        wp_send_json_success("Ďakujeme, boli ste úspešne zaregistrovaní na toto podujatie.");
+        wp_send_json_success("Zaregistrovaný! Skontroluj si email, ktorý sme ti zaslali.");
     }
 
     wp_send_json_error("Nepodarilo sa Vás zaregistrovať na tento email. Prosím kontaktujte nás pre viac informácii.");
@@ -187,11 +188,17 @@ function sw_submit_register_form()
 
 function send_email_to_participant($eventID, $formID, $submittedFields, $filesSaved, $submissionID)
 {
-    $headers[] = 'Content-Type: text/html; charset=UTF-8';
-
     $template = prepare_participant_email($eventID, $formID, $submittedFields, $filesSaved, $submissionID);
     $subject = "SW Slovakia Registrácia | " . get_the_title($eventID);
-    $recipient = get_field("registrations_recipient", $formID);
+    $bcc = get_field("registrations_recipient", $formID);
+    $recipient = $submittedFields['email'] ?? null;
+
+    $headers[] = 'Content-Type: text/html; charset=UTF-8';
+    if(!empty($recipient)) {
+        $headers[] = 'Bcc: ' . $bcc;
+    } else {
+        $recipient = $bcc;
+    }
 
     return wp_mail($recipient, $subject, $template, $headers);
 }
@@ -223,7 +230,9 @@ function prepare_participant_email($eventID, $formID, $submittedFields, $filesSa
     }
 
     $buttons = get_field('externe_odkazy', $formID);
-    $buttons[] = ['url' => 'https://google.sk/', 'name' => "Pridať do kalendára", 'color' => '#f59542'];
+    $startDate = date("Y-m-d", strtotime(get_field("event_start", $eventID))) . " 06:30";
+    $endDate = date("Y-m-d", strtotime(get_field("event_end", $eventID))) . " 06:30";
+    $buttons[] = ['url' => site_url() . "/wp-json/api/v1/generate-ics?name=" . get_the_title($eventID) . '&start=' . $startDate . '&end=' . $endDate, 'name' => "Pridať do kalendára", 'color' => '#f59542'];
     $template = get_template_part_as_string("template_parts/emails/templates/default-email-template", ['data' => [
         'title' => get_the_title($eventID),
         'subtitle' => "Súhrn vašej registrácie",
@@ -237,6 +246,7 @@ function prepare_participant_email($eventID, $formID, $submittedFields, $filesSa
 function get_field_names_from_flexible_content($flexibleContent) {
     $fieldNames = [];
     foreach ($flexibleContent as $field) {
+        if($field['is_hidden'] ?? false) continue;
         $fieldNames[sanitize_title($field['name'])] = $field['name'];
     }
     return $fieldNames;
@@ -246,13 +256,19 @@ function get_field_names_from_flexible_content($flexibleContent) {
 function get_suhrn_platby($formID, $submittedFields, $submissionID)
 {
     $paymentInfo = get_field("payment_info", $formID);
+    if($submittedFields['noclah-v-blizkosti-ihriska'] === 'Mám záujem') {
+        $paymentInfo['amount'] += 5;
+    }
+    $isCZ = $submittedFields['narodnost'] === "Česká";
+    $paymentInfo['amount'] = $isCZ ? $paymentInfo['amount'] * 26 : $paymentInfo['amount'];
     $note = replace_constants([
         'MENO' => $submittedFields['meno'],
         'PRIEZVISKO' => $submittedFields['priezvisko'],
     ], $paymentInfo['pay_by_square_note']);
-
-    $payBySquareBase64 = 'data:image/png;base64,' . base64_encode(generate_pay_by_square_qr($paymentInfo['iban'], $paymentInfo['amount'], $note));
-    $payBySquare = save_uploaded_file("pay_by_square", $payBySquareBase64, $submissionID, $formID);
+    $currency = $isCZ ? "CZK" : "EUR";
+    $bic = "BARCGB22";
+    $dueDate = date("Y-m-d");
+    $payBySquare = generate_pay_by_square_qr($paymentInfo['iban'], $paymentInfo['amount'], $currency, $dueDate, $bic, $note, $submissionID, $formID);
     return get_template_part_as_string("template_parts/emails/parts/payment-summary", [
         'data' => array_merge(
             $paymentInfo,
@@ -262,7 +278,8 @@ function get_suhrn_platby($formID, $submittedFields, $submissionID)
                 'meno' => $submittedFields['meno'],
                 'priezvisko' => $submittedFields['priezvisko'],
                 'submission_id' => $submissionID,
-                'pay_by_square' => $payBySquare
+                'pay_by_square' => $payBySquare,
+                'currency' => $currency
             ]
         )
     ]);
@@ -298,45 +315,20 @@ function save_uploaded_file($filename_to_save, $file, $submissionID, $formID)
         return false; // Unable to create directory, handle accordingly
     }
 
-    // Check if $file is a base64 encoded string
-    if (is_string($file) && str_contains($file, ";base64")) {
-        try {
-            $file = get_file_from_base64($file);
-        } catch (Exception $e) {
-            return false; // Handle the exception gracefully
-        }
+    $filename_to_save = $filename_to_save . "." . $file['image_type'];
 
-        // Get the file extension from the original filename
-        $filename_to_save = $filename_to_save . "." . $file['image_type'];
+    // Generate unique file name
+    $filename = wp_unique_filename($submissionDirectory, $filename_to_save);
 
-        // Generate unique filename for the final file
-        $filename = wp_unique_filename($submissionDirectory, $filename_to_save);
-
-        // Construct final file path
-        $finalFilePath = $submissionDirectory . '/' . $filename;
-
-        // Save the base64 decoded file directly to the final folder
-        if (!file_put_contents($finalFilePath, $file['image_data']) || !chmod($finalFilePath, 0777)) {
-            return false; // Unable to save file or set permissions, handle accordingly
-        }
-
-    } else {
-        // If $file is not base64 encoded, proceed with regular file saving logic
-
-        $filename_to_save = $filename_to_save . "." . $file['image_type'];
-
-        // Generate unique file name
-        $filename = wp_unique_filename($submissionDirectory, $filename_to_save);
-
-        // Move the uploaded file to the submission directory
-        $tmpPath = $file['tmp_name'];
-        $finalFilePath = $submissionDirectory . '/' . $filename;
+    // Move the uploaded file to the submission directory
+    $tmpPath = $file['tmp_name'];
+    $finalFilePath = $submissionDirectory . '/' . $filename;
 
 
-        if (!file_exists($tmpPath) || !move_uploaded_file($tmpPath, $finalFilePath)) {
-            return false; // Unable to move file, handle accordingly
-        }
+    if (!file_exists($tmpPath) || !move_uploaded_file($tmpPath, $finalFilePath)) {
+        return false; // Unable to move file, handle accordingly
     }
+
 
     return wp_upload_dir()['baseurl'] . '/form_uploads/' . $formID . '/' . $submissionID . '/' . $filename;
 }
