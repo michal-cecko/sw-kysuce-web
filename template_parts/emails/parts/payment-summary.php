@@ -16,6 +16,7 @@ $payBySquare = $data['pay_by_square'] ?? null;
                 IBAN: <br><b><?= $data['iban'] ?></b><br><br>
                 Suma: <br><b><?= $data['amount'] ?><?= $data['currency'] ?? "€" ?></b><br><br>
                 Názov príjemcu: <br><b>SW Slovakia</b><br><br>
+                Adresa príjemcu: <br><b>Kukučínova 1322</b><br>022 01 Čadca<br><br>
                 Poznámka: <br><b><?= $data['note'] ?></b><br>
             </td>
         </tr>
