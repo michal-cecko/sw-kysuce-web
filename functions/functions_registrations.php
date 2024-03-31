@@ -136,7 +136,6 @@ function sw_submit_register_form()
             if ($checkUniqueEmail) {
                 foreach ($submission as $field => $value) {
                     if (str_contains($field, "email") && $value == $fields[$field]) {
-                        //TODO later remove
                         //wp_send_json_error("Tento email už je zaregistrovaný na tento event. (#2)");
                     }
                 }

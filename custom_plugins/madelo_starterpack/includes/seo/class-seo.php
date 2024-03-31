@@ -165,19 +165,19 @@ class madeloSeo
 
         $postDate = $post?->post_date;
         $type = is_single() ? 'article' : 'website';
-        $seoCustomDesc = strip_tags(get_post_meta($post->ID, 'seoCustomDesc', true));
+        $seoCustomDesc = strip_tags(get_post_meta($post?->ID, 'seoCustomDesc', true));
         $seoDefaultImg = get_template_directory_uri() . "/assets/images/default_og_image.jpg";
-        $seoCustomImg = get_post_meta($post->ID, 'seoCustomImg', true);
-        $seoTitle = get_post_meta($post->ID, 'seoCustomTitle', true);
+        $seoCustomImg = get_post_meta($post?->ID, 'seoCustomImg', true);
+        $seoTitle = get_post_meta($post?->ID, 'seoCustomTitle', true);
 
         if(!$seoTitle)
         {
-            $seoTitle = get_the_title($post->ID) ? : '';
+            $seoTitle = get_the_title($post?->ID) ? : '';
         }
 
         if(!$seoCustomDesc)
         {
-            $seoCustomDesc = substr(strip_tags(get_post_field('post_content', $post->ID)), 0, 150);
+            $seoCustomDesc = substr(strip_tags(get_post_field('post_content', $post?->ID)), 0, 150);
         }
 
         $desc = $seoCustomDesc ? : get_bloginfo('description');
@@ -189,7 +189,7 @@ class madeloSeo
         }
         else
         {
-            $seoCustomImg = get_post_thumbnail_id($post->ID);
+            $seoCustomImg = get_post_thumbnail_id($post?->ID);
             if($seoCustomImg)
             {
                 $metadata = wp_get_attachment_metadata($seoCustomImg);

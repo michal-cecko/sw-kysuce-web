@@ -44,7 +44,7 @@ $borderAndLabelColor: #838286;
       position: absolute;
       left: 0;
       top: 1.3rem;
-      font-size: 1.15rem;
+      font-size: 1rem;
       color: $borderAndLabelColor;
 
       > span {
@@ -89,6 +89,8 @@ $borderAndLabelColor: #838286;
   }
 
   &.custom-select {
+    z-index: 9;
+
     &:not(.is-multiple) {
       .selected-values {
         display: flex;
@@ -116,7 +118,7 @@ $borderAndLabelColor: #838286;
 
     .options {
       display: block;
-      z-index: 2;
+      z-index: 8;
       position: absolute;
       left: 0;
       width: 100%;
@@ -130,12 +132,12 @@ $borderAndLabelColor: #838286;
       .empty{
         cursor: pointer;
         padding: 0.7rem 1rem;
-        background: rgba(#BAD6E0, 0.95);
+        background: rgba(#BAD6E0, 1);
         display: flex;
         align-items: center;
 
         &:nth-child(odd) {
-          background: rgba(#c7dee7, 0.95);
+          background: rgba(#c7dee7, 1);
         }
 
         &.selected {
@@ -169,7 +171,7 @@ $borderAndLabelColor: #838286;
       display: flex;
       align-items: center;
       transition: all 0.3s ease;
-      font-size: 1.15rem;
+      font-size: 1rem;
       color: $borderAndLabelColor;
       margin-bottom: 0.5rem;
     }

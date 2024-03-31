@@ -85,7 +85,7 @@
                 $allowed = implode(", ", explode(",", str_replace(" ", "", strtoupper($field['allowed_file_types'])))) ?>
                 <div class="position-relative">
                     <?= infoTooltip($field) ?>
-                    <div class="form-field-container is-file-input <?= required($field) ?>" style="z-index: 1"
+                    <div class="form-field-container is-file-input <?= required($field) ?>" style="z-index: 5"
                          onclick="document.getElementById('<?= $id ?>').click();" data-allowed_types="<?= $allowed ?>"
                          data-name="<?= $field['name'] ?>">
                         <input type="file" class="form-field" name="<?= $id ?>" id="<?= $id ?>">
@@ -142,7 +142,7 @@ function infoTooltip($field) {
     ob_start();
     if(!empty($field['info'])) :
 ?>
-    <div class="tooltip-container show-on-left" style="z-index: 10">
+    <div class="tooltip-container show-on-left" style="z-index: 6">
         <div class="tooltip">
             <div class="icon">
                 <?= svgIcon(icon_path(false) . "icon-info.svg") ?>
