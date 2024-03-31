@@ -113,6 +113,8 @@ class Event extends Commons {
     }
 
     initCountdown() {
+        let _thisClass = this;
+
         let countdown = document.querySelector("#flipdown");
         if (!countdown) return;
 
@@ -128,7 +130,11 @@ class Event extends Commons {
         // Using the timestampInSeconds in your FlipDown initialization
         const flipdown = new FlipDown(timestampInSeconds, {
             headings: ["Dní", "Hodín", "Minút", "Sekúnd"],
-        }).start();
+        }).start().ifEnded(() => {
+            _thisClass.notify("REGISTRÁCIE SPUSTENÉ !!!", "warning")
+            console.log("Countdown has ended!");
+            window.location.reload()
+        });
     }
 
 }

@@ -20,25 +20,19 @@ class Tooltip extends Commons {
                         if (tooltipContainer.classList.contains("active")) {
                             tooltipContainer.classList.remove("active");
                         } else {
-                            let timeout = this.timeouts?.[i];
+                            let timeout = _thisClass.timeouts?.[i];
                             if (timeout) {
                                 clearTimeout(timeout);
                             }
 
                             tooltipContainer.classList.add("active");
 
-                            this.timeouts[i] = setTimeout(function () {
+                            _thisClass.timeouts[i] = setTimeout(function () {
                                 tooltipContainer.classList.remove("active");
                             }, 5000);
                         }
 
                         i++;
-                    })
-
-                    _thisClass.addClickOutsideListener(tooltipContainer, function () {
-                        if (tooltipContainer.classList.contains("active")) {
-                            tooltipContainer.classList.remove("active");
-                        }
                     })
                 })
             }, 200)

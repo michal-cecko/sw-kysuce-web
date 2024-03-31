@@ -70,10 +70,13 @@ $hasLocalForm = !empty($form);
 
             <?php
             $eventStart = get_field("event_register_start");
-            $shownTimer = !empty($eventStart) && strtotime($eventStart) > time();
+            $eventStart = strtotime($eventStart);
+            $current =  strtotime("+2 hours", time());
+            $shownTimer = !empty($eventStart) && $eventStart > $current;
             if($shownTimer && get_current_user_id()) {
                 $shownTimer = false;
             }
+            $eventStart = date("Y-m-d H:i:s", $eventStart);
             ?>
             <div class="register-container d-flex flex-column justify-content-center align-items-center">
 
