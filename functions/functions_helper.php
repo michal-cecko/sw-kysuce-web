@@ -455,8 +455,52 @@ function custom_remove_accents($string)
 }
 
 function decodeUnicodeString($str) {
-    $decoded_str = preg_replace_callback('/u([0-9a-fA-F]{4})/', function ($match) {
-        return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE');
-    }, $str);
+    // Mapping array for Unicode to accented characters
+    $unicode_to_accented = [
+        'u00e1' => 'á',
+        'u00e9' => 'é',
+        'u00ed' => 'í',
+        'u00f3' => 'ó',
+        'u00fa' => 'ú',
+        'u00e4' => 'ä',
+        'u00ef' => 'ï',
+        'u00fc' => 'ü',
+        'u00ff' => 'ÿ',
+        'u00f1' => 'ñ',
+        'u0161' => 'š',
+        'u010d' => 'č',
+        'u0165' => 'ť',
+        'u017e' => 'ž',
+        'u00fd' => 'ý',
+        'u00cb' => 'Ë',
+        'u00cf' => 'Ï',
+        'u00d6' => 'Ö',
+        'u00dc' => 'Ü',
+        'u00d1' => 'Ñ',
+        'u0160' => 'Š',
+        'u010c' => 'Č',
+        'u0164' => 'Ť',
+        'u017d' => 'Ž',
+        'u00dd' => 'Ý',
+        'u00d3' => 'Ó',
+        'u00c1' => 'Á',
+        'u00cd' => 'Í',
+        'u00c9' => 'É',
+        'u00da' => 'Ú',
+        'u00c4' => 'Ä',
+        'u0147' => 'ň',
+        'u00d4' => 'Ô',
+        'u013e' => 'ľ',
+        'u00f4' => 'ô',
+        'ud83e' => '',
+        'u011b' => 'ě',
+        'u016f' => 'ů',
+        'u0159' => 'ř',
+        'u00a0' => ' ',
+    ];
+
+    // Perform the replacement
+    $decoded_str = strtr($str, $unicode_to_accented);
+
     return $decoded_str;
 }

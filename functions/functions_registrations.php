@@ -82,8 +82,9 @@ function sw_register_submitted_forms_meta_box()
 
 function sw_print_submitted_forms($form)
 {
-    $rows = json_decode(decodeUnicodeString(get_post_meta($form->ID, "submitted_forms", true)), true);
-    get_template_part("template_parts/admin/submitted_form-rows", "", compact("rows", "form"));
+    $x = decodeUnicodeString(get_post_meta($form->ID, "submitted_forms", true));
+    $rows = json_decode($x, true);
+    get_template_part("template_parts/admin/submitted_form-rows", "", ['rows' => $rows, 'form' => $form]);
 }
 
 

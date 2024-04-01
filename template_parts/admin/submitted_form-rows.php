@@ -22,7 +22,7 @@ function outputSubmitttedRow($fieldValue)
                         <div class="field">
                             <div class="name"><?= $fieldsName ?></div>
                             <?php if (is_array($fieldValue)) : ?>
-                                <?php foreach ($fieldValue as $item) : ?>
+                                <?php foreach ($fieldValue as $item) : var_dump($item); ?>
                                     <?= outputSubmitttedRow($item) ?>
                                 <?php endforeach ?>
                             <?php else : ?>
