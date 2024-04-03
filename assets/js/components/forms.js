@@ -17,6 +17,11 @@ export default class Forms extends Commons {
     }
 
     addClickOutsideListener(element, callback) {
+        if (!(element instanceof Element)) {
+            console.error('Invalid element:', element);
+            return;
+        }
+
         document.addEventListener('mousedown', function (event) {
             if (!element.contains(event.target)) {
                 const clickOutsideEvent = new CustomEvent('click-outside');
@@ -32,12 +37,15 @@ export default class Forms extends Commons {
         let fileName = file.name;
         let isValid;
 
+        console.log(allowedFileTypes)
+
         //check extension
         if (!allowedFileTypes.length) {
             isValid = true
         } else {
             isValid = "Nepovolený typ súboru.";
-            allowedFileTypes.every((ext) => {
+            allowedFileTypes.forEach((ext) => {
+                console.log(fileName.toLowerCase(), ext.toLowerCase())
                 if (fileName.toLowerCase().endsWith(ext.toLowerCase())) {
                     isValid = true;
                 }
@@ -169,10 +177,12 @@ export default class Forms extends Commons {
 
                     //Select
                     else if (field.classList.contains("custom-select")) {
-                        let focusTarget = field.querySelector(".selected-values");
+                        let focusTargetClass = 'selected-values';
+                        let focusTarget = field.querySelector(`.${focusTargetClass}`);
                         let hiddenInputOfSelect = field.querySelector("input");
                         let optionsContainerClass = 'options';
-                        let options = field.querySelectorAll(`.${optionsContainerClass} .option`);
+                        let optionsContainer = field.querySelector(`.${optionsContainerClass}`);
+                        let options = optionsContainer.querySelectorAll('.option');
                         let isMultiple = field.classList.contains("multiple");
                         let openedOptionsClass = "opened";
                         let selectedOptionClass = "selected";
@@ -193,16 +203,19 @@ export default class Forms extends Commons {
                             fieldToHide.classList.remove(openedOptionsClass)
                         }
 
-                        field.addEventListener('click', function (e) {
-                            if (e.target.closest(`.${optionsContainerClass}`)) {
-                                return
+                        focusTarget.addEventListener('click', function (e) {
+                            if(field.classList.contains(openedOptionsClass)) {
+                                hideFieldOptions(field)
+                            } else {
+                                field.classList.add(focusedClass, openedOptionsClass)
                             }
-
-                            field.classList.add(focusedClass, openedOptionsClass)
                         });
 
-                        _thisClass.addClickOutsideListener(field, function () {
-                            hideFieldOptions(field)
+                        _thisClass.addClickOutsideListener(optionsContainer, function (e) {
+                            if(field.classList.contains(openedOptionsClass)) {
+                                console.log("cl2")
+                                hideFieldOptions(field)
+                            }
                         })
 
                         hiddenInputOfSelect.addEventListener('change', function () {

@@ -39,19 +39,15 @@
                 <nav>
                     <ul class="d-flex justify-content-between align-items-center">
                         <?php printMenu("header-links"); ?>
-                        <a href="<?= get_site_url() ?>/podujatia-a-sutaze" class="events-link ml-auto d-flex align-items-center d-md-none d-flex">
-                            <?= svgIcon(icon_path(false) . "icon-calendar.svg") ?>
-                            <span class="text"><?= __("Kalendár podujatí", "swslovakia") ?></span>
-                        </a>
-                        <a href="<?= get_site_url() ?>/kontakt" class="contact-button d-md-none d-flex justify-content-center align-items-center">
-                            <lord-icon
-                                    src="<?= icon_path() ?>/icon-phone-animated.json"
-                                    trigger="loop-on-hover"
-                                    stroke="90"
-                                    target="a.contact-button"
-                                    colors="primary:#1C1B2B,secondary:#F03834">
-                            </lord-icon>
-                        </a>
+                        <li>
+                            <a href="<?= get_site_url() ?>/podujatia-a-sutaze" class="events-link ml-auto d-flex align-items-center d-md-none d-flex">
+                                <?= svgIcon(icon_path(false) . "icon-calendar.svg") ?>
+                                <span class="text"><?= __("Kalendár podujatí", "swslovakia") ?></span>
+                            </a>
+                        </li>
+                        <li class="d-md-none d-block">
+                            <a href="<?= get_site_url() ?>/kontakt"><?= __("Kontakt", "swslovakia") ?></a>
+                        </li>
                     </ul>
                 </nav>
                 <div class="toggler-container d-md-none d-flex">
