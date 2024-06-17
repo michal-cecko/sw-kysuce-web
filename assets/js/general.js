@@ -23,20 +23,21 @@ class General extends Commons {
             slidesPerView: 3.25,
             spaceBetween: 16,
             navigation: false,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
             breakpoints: {
                 768: {
                     slidesPerView: 4,
-                    slidesPerGroup: 4,
                     spaceBetween: 16,
                 },
                 1000: {
                     slidesPerView: 5,
                     spaceBetween: 24,
-                    slidesPerGroup: 5,
                 },
                 1400: {
                     slidesPerView: 6,
-                    slidesPerGroup: 6,
                     spaceBetween: 32,
                 },
             }

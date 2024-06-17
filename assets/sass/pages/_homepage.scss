@@ -8,6 +8,10 @@
   max-height: 2000px;
   background: linear-gradient($gradientFrom, $gradientTo);
 
+  @include media-breakpoint-down(md) {
+    padding-bottom: 0;
+  }
+
   .black-bg {
     z-index: 0;
     position: absolute;

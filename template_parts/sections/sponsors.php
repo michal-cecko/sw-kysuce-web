@@ -3,6 +3,8 @@
         'posts_per_page' => -1,
         'post_status' => 'publish',
         'post_type' => 'sponsor',
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
         'meta_query' => array(
             array(
                 'key' => 'is_hidden',
@@ -31,6 +33,7 @@
                         <div class="swiper-slide d-flex justify-content-center align-items-center">
                             <a href="<?= get_field("link") ?? "#" ?>" class="sponsor--logo" target="_blank">
                                 <img src="<?= get_field("logo") ?>" alt="<?= get_the_title() ?>">
+                                <p><?= get_the_title() ?></p>
                             </a>
                         </div>
                     <?php endwhile; wp_reset_query(); ?>

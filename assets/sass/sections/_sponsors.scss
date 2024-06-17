@@ -1,8 +1,12 @@
 #sponsors {
-  margin-top: 6rem;
+  margin-top: 5rem;
 
   .swiper-sponsors {
-    height: 13rem;
+    height: 17rem;
+
+    .swiper-slide{
+      position: relative;
+    }
 
     .sponsor {
       &--logo {
@@ -12,12 +16,33 @@
           transition: 0.5s ease all;
           filter: grayscale(100%);
         }
+        p{
+          text-align: center;
+          color: $secondaryBlack;
+          transition: all 0.3s ease;
+          font-family: $secondaryFont;
+          position: absolute;
+          left: 50%;
+          bottom: 0;
+          transform: translateX(-50%);
+          width: 85%;
+          font-size: 0.8rem;
+        }
         @include hover() {
           img{
             filter: grayscale(0%);
           }
+          p{
+            color: $primaryBlack;
+          }
         }
       }
     }
+  }
+  @include media-breakpoint-down(md){
+    .swiper-sponsors {
+      height: 13rem;
+    }
+    margin-bottom: 2rem;
   }
 }
