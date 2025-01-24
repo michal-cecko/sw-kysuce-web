@@ -173,7 +173,7 @@ function send_contact_form($data) {
 
     $headers[] = 'Content-Type: text/html; charset=UTF-8';
     $body = get_template_part_as_string("template_parts/emails/submitted-contact-form", ['data' => $data]);
-    $subject = "SW Slovakia | Nová správa z kontaktného formulára";
+    $subject = "SW Kysuce | Nová správa z kontaktného formulára";
     $recipient = get_field("contact_form_email", get_id_by_slug("kontakt"));
 
     if(wp_mail($recipient, $subject, $body, $headers)) {

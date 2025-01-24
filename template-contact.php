@@ -13,9 +13,9 @@
                         <button @click="toggleActiveForm('contact')" class="btn btn--small btn--red" :class="activeForm === 'contact' ? 'btn--red active' : 'btn--white'">
                             <span>Opýtať sa</span>
                         </button>
-                        <button @click="toggleActiveForm('playground')" class="btn btn--small" :class="activeForm === 'playground' ? 'btn--red active' : 'btn--white'">
+<!--                        <button @click="toggleActiveForm('playground')" class="btn btn&#45;&#45;small" :class="activeForm === 'playground' ? 'btn&#45;&#45;red active' : 'btn&#45;&#45;white'">
                             <span>Nahlásiť ihrisko</span>
-                        </button>
+                        </button>-->
                     </div>
                     <div class="form-container" v-show="activeForm === 'contact'" id="contactForm">
                         <div class="row">

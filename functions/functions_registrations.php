@@ -189,7 +189,7 @@ function sw_submit_register_form()
 function send_email_to_participant($eventID, $formID, $submittedFields, $filesSaved, $submissionID)
 {
     $template = prepare_participant_email($eventID, $formID, $submittedFields, $filesSaved, $submissionID);
-    $subject = "SW Slovakia Registrácia | " . get_the_title($eventID);
+    $subject = "SW Kysuce Registrácia | " . get_the_title($eventID);
     $bcc = get_field("registrations_recipient", $formID);
     $recipient = $submittedFields['email'] ?? null;
 

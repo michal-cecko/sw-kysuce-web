@@ -33,8 +33,8 @@
         <div class="container">
             <div class="header-wrapper d-flex align-items-center">
                 <a href="<?= home_url() ?>" class="logo-container">
-                    <?= svgIcon(icon_path(false) . "logo.svg", ['class' => ['logo d-md-block d-none']]) ?>
-                    <?= svgIcon(icon_path(false) . "logo-without-slovakia.svg", ['class' => ['logo d-md-none d-block']]) ?>
+                    <?= svgIcon(icon_path(false) . "logo-swk.svg", ['class' => ['logo d-md-block d-none']]) ?>
+                    <?= svgIcon(icon_path(false) . "logo-swk.svg", ['class' => ['logo d-md-none d-block']]) ?>
                 </a>
                 <nav>
                     <ul class="d-flex justify-content-between align-items-center">

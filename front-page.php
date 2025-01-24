@@ -45,9 +45,9 @@ $pinnedEvent = new WP_Query($args);
         <div class="upper-half d-flex justify-content-between">
             <div class="text-container">
                 <h1 class="intro-heading">
-                    <?= __("Slovenské združenie", "swslovakia") ?>
+                    <?= __("Kysucký tím", "swslovakia") ?>
                     <br>
-                    <?= __("pre", "swslovakia") ?>
+                    <?= __("za", "swslovakia") ?>
                     <span class="labelled-text red big">
                             <span><?= __("street", "swslovakia") ?></span>
                         </span>
