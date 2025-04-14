@@ -105,7 +105,7 @@ function reading_time($id)
 
 function printMenu($location)
 {
-    $menu = wp_get_menu_array("footer-links");
+    $menu = wp_get_menu_array($location);
     if ($menu) {
         foreach ($menu as $key => $item) { ?>
             <li>
@@ -282,6 +282,8 @@ function getEventDate($event)
 
 function checkCaptcha($responseToken)
 {
+    return true;
+
     if(LOCALHOST) return true;
 
     $secretKey = '***REMOVED***';

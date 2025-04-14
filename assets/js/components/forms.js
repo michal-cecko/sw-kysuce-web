@@ -37,8 +37,6 @@ export default class Forms extends Commons {
         let fileName = file.name;
         let isValid;
 
-        console.log(allowedFileTypes)
-
         //check extension
         if (!allowedFileTypes.length) {
             isValid = true
@@ -63,15 +61,16 @@ export default class Forms extends Commons {
     }
 
     checkCaptcha() {
-        let _this = this
         return new Promise(function (resolve, reject) {
-            grecaptcha.ready(function () {
+            //TODO FIX CAPTCHA
+            /*grecaptcha.ready(function () {
                 grecaptcha.execute("***REMOVED***", {action: 'submit'}).then(function (token) {
                     resolve(token);
                 }).catch(function (error) {
                     reject(error)
                 });
-            });
+            });*/
+            resolve()
         });
     }
 

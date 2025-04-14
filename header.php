@@ -38,6 +38,7 @@
                 </a>
                 <nav>
                     <ul class="d-flex justify-content-between align-items-center">
+
                         <?php printMenu("header-links"); ?>
                         <li>
                             <a href="<?= get_site_url() ?>/podujatia-a-sutaze" class="events-link ml-auto d-flex align-items-center d-md-none d-flex">

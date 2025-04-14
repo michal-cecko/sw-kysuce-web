@@ -11,11 +11,10 @@
                 </ul>
             </div>
             <div class="newsletter-container col-lg-4">
-                <h4 class="heading">Newsletter</h4>
+<!--                <h4 class="heading">Newsletter</h4>
                 <p class="secondary-text">
                     Zaregistrujte sa do nášho newsletteru, aby ste dostali e-mail pri každom uverejnení nového článku.
-                </p>
-                <!--  TODO: INPUT NA NEWSLETTER  -->
+                </p>-->
             </div>
             <div class="socials-container col-lg-3">
                 <h4 class="heading">Sleduj nás</h4>

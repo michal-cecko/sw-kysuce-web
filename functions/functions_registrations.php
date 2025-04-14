@@ -257,7 +257,7 @@ function get_suhrn_platby($formID, $submittedFields, $submissionID)
 {
     $paymentInfo = get_field("payment_info", $formID);
     if($submittedFields['noclah-v-blizkosti-ihriska'] === 'Mám záujem') {
-        $paymentInfo['amount'] += 5;
+        $paymentInfo['amount'] += 10;
     }
     $isCZ = $submittedFields['narodnost'] === "Česká";
     $paymentInfo['amount'] = $isCZ ? $paymentInfo['amount'] * 26 : $paymentInfo['amount'];

@@ -9,8 +9,19 @@
 $args = [
     'posts_per_page' => 4,
     'post_status' => 'publish',
-    'post_type' => 'post',
-    'cat' => 4, // ID kategórie "Súťaže"
+    'post_type' => 'event',
+    'orderby' => 'meta_value',
+    'meta_key' => 'event_start',
+    'order' => 'ASC',
+    'meta_query' => [
+        'relation' => "AND",
+        [
+            'key' => 'event_start',
+            'value' => date('Y-m-d'),
+            'compare' => '>=',
+            'type' => 'DATE'
+        ]
+    ],
 ];
 $reports = new WP_Query($args);
 
@@ -18,10 +29,12 @@ $args = [
     'posts_per_page' => 4,
     'post_status' => 'publish',
     'post_type' => 'post',
+    'orderby' => 'date',
+    'order' => 'DESC',
 ];
-if ($reports->have_posts()) $args['post__not_in'] = wp_list_pluck($reports->posts, 'ID');
-
 $latestArticles = new WP_Query($args);
+
+
 $args = [
     'posts_per_page' => 1,
     'post_status' => 'publish',
@@ -174,8 +187,7 @@ $pinnedEvent = new WP_Query($args);
                                     'classes' => ['lg-column']
                                 ]); ?>
                             </div>
-                        <?php $i++; endwhile;
-                        wp_reset_query(); ?>
+                        <?php $i++; endwhile; wp_reset_query(); ?>
                     </div>
                 </div>
             <?php endif ?>
@@ -213,11 +225,11 @@ $pinnedEvent = new WP_Query($args);
 
 <!--   REPORTS SECTION ----- START    -->
 
-
 <section id="reportsSection">
     <div class="container">
         <div class="section-id" id="reporty_zo_sutazi"></div>
-        <h1 class="heading"><?= get_field("home_reports_heading") ?></h1>
+
+        <h1 class="heading">Nadchádzajúce podujatia</h1>
         <span class="bg-text d-md-block d-none">súťaže</span>
         <?php if ($reports->have_posts()) : ?>
             <div class="reports-container red-scrollbar">
@@ -234,9 +246,9 @@ $pinnedEvent = new WP_Query($args);
                     <?php endwhile ?>
                 </div>
             </div>
-        <?php endif ?>
+        <?php wp_reset_query(); endif ?>
 
-        <a href="<?= get_site_url() ?>/blog" class="learn-more-btn mt-5">
+        <a href="<?= get_site_url() ?>/podujatia-a-sutaze" class="learn-more-btn mt-5">
             <?= __("Zobraziť viac", "swslovakia") ?>
             <span class="icon">
                 <?= svgIcon(icon_path(false) . "icon-arrow_right.svg") ?>
@@ -254,7 +266,7 @@ $pinnedEvent = new WP_Query($args);
                 </span>
             <span class="labelled-text red big">
                 <span>
-                <?= __("reporty", "swslovakia") ?>
+                <?= __("podujatia", "swslovakia") ?>
                 </span>
             </span>
         </div>
