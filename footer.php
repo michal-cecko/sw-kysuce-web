@@ -21,10 +21,12 @@
                 <p class="secondary-text">
                     Nezabudni nám hodiť follow, aby ti nič neuniklo!
                 </p>
+                <p class="secondary-text">
+                    Made by <b><a href="https://synapps.sk">Synapps</a></b>
+                </p>
                 <?php get_template_part("template_parts/other/social-icons", "", ['color' => 'black']); ?>
             </div>
         </div>
-        <div class="made-by">Made by <a href="https://synapps.sk">Synapps</a></div>
     </div>
 </footer>
 
