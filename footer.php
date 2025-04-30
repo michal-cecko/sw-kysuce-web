@@ -24,6 +24,7 @@
                 <?php get_template_part("template_parts/other/social-icons", "", ['color' => 'black']); ?>
             </div>
         </div>
+        <div class="made-by">Made by <a href="https://synapps.sk">Synapps</a></div>
     </div>
 </footer>
 
