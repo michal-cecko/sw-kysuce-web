@@ -44,7 +44,7 @@ function disable_single_pages_for_registrations()
         if ($postType === 'form') {
             wp_redirect(home_url());
             exit;
-        } elseif ($postType === 'event' && checkIfEventHasPassed(get_the_ID())) {
+        } elseif ($postType === 'event' && checkIfEventHasPassed(get_the_ID()) && !get_field("event_is_public_after_start")) {
             wp_redirect(home_url());
             exit;
         }
@@ -104,7 +104,7 @@ function sw_submit_register_form()
         wp_send_json_error("Nastala neočakávaná chyba. Skúste to prosím neskôr. (#1)");
     }
 
-    if (checkIfEventHasPassed($eventID)) {
+    if (checkIfEventHasPassed($eventID) && !get_field("event_is_public_after_start")) {
         wp_send_json_error("Tento event už začal a nieje možné sa naň zaregistrovať. (#2)");
     }
 

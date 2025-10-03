@@ -6,6 +6,8 @@ if ($ip == '127.0.0.1' or $ip == '::1') {
     define('LOCALHOST', false);
 }
 
+date_default_timezone_set('Europe/Bratislava'); // or your timezone
+
 const WP_VERSIONING = false && !LOCALHOST;
 $version = wp_get_theme()->get("Version") ?? "1.1.0";
 DEFINE("VERSION", !WP_VERSIONING ? time() : $version);
