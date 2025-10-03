@@ -104,7 +104,7 @@ function sw_submit_register_form()
         wp_send_json_error("Nastala neočakávaná chyba. Skúste to prosím neskôr. (#1)");
     }
 
-    if (checkIfEventHasPassed($eventID) && !get_field("event_is_public_after_start")) {
+    if (checkIfEventHasPassed($eventID) && !get_field("event_is_public_after_start", $eventID)) {
         wp_send_json_error("Tento event už začal a nieje možné sa naň zaregistrovať. (#2)");
     }
 
@@ -232,7 +232,7 @@ function prepare_participant_email($eventID, $formID, $submittedFields, $filesSa
     $buttons = get_field('externe_odkazy', $formID);
     $startDate = date("Y-m-d", strtotime(get_field("event_start", $eventID))) . " 06:30";
     $endDate = date("Y-m-d", strtotime(get_field("event_end", $eventID))) . " 06:30";
-    $buttons[] = ['url' => site_url() . "/wp-json/api/v1/generate-ics?name=" . get_the_title($eventID) . '&start=' . $startDate . '&end=' . $endDate, 'name' => "Pridať do kalendára", 'color' => '#f59542'];
+    //$buttons[] = ['url' => site_url() . "/wp-json/api/v1/generate-ics?name=" . get_the_title($eventID) . '&start=' . $startDate . '&end=' . $endDate, 'name' => "Pridať do kalendára", 'color' => '#f59542'];
     $template = get_template_part_as_string("template_parts/emails/templates/default-email-template", ['data' => [
         'title' => get_the_title($eventID),
         'subtitle' => "Súhrn vašej registrácie",
