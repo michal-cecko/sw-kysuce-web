@@ -279,8 +279,10 @@
         border-bottom: 0;
       }
       .icon {
-        width: 2rem;
+        min-width: 2rem;
+        min-height: 2rem;
         height: 2rem;
+        width: 2rem;
         display: flex;
         justify-content: center;
         align-items: center;

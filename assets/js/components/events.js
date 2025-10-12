@@ -1,6 +1,5 @@
-import { ref, onMounted } from 'vue';
 import Commons from "./commons.min.js";
-import { createApp } from '../libs/vue/vue.min.js';
+import { createApp, ref, onMounted } from '../libs/vue/vue.min.js'
 
 class Events extends Commons {
     constructor() {
@@ -16,6 +15,8 @@ class Events extends Commons {
         const postsContent = ref("");
         const loading = ref(false);
         const years = ref([]);
+
+        console.log("initting...")
 
         const loadPosts = async (moreParams = {}) => {
             loading.value = true;
@@ -41,15 +42,10 @@ class Events extends Commons {
             return posts;
         };
 
-        onMounted(async () => {
-            years.value = document.getElementById("pastEventsData")?.dataset?.years.split(",");
-            await fetchContent(years.value[0]);
-
-            refreshFsLightbox();
-        });
-
         const fetchContent = async (year) => {
-            if (activeYear.value === year) return;
+            //if (activeYear.value === year) return;
+
+            console.log("fetching...")
 
             activeYear.value = year;
             const data = await loadPosts({
@@ -60,8 +56,11 @@ class Events extends Commons {
 
         const app = createApp({
             setup() {
-                onMounted(() => {
+                onMounted(async () => {
                     console.log("Events component created.");
+                    years.value = document.getElementById("pastEventsData")?.dataset?.years.split(",");
+                    await fetchContent(years.value[0]);
+                    refreshFsLightbox();
                 });
 
                 return {

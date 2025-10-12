@@ -14,16 +14,31 @@ $args = [
     'meta_key' => 'event_start',
     'order' => 'ASC',
     'meta_query' => [
-        'relation' => "AND",
+        'relation' => "OR",
         [
             'key' => 'event_start',
             'value' => date('Y-m-d'),
             'compare' => '>=',
             'type' => 'DATE'
+        ],
+        [
+            'relation' => 'AND',
+            [
+                'key' => 'event_start',
+                'value' => date('Y-m-d'),
+                'compare' => '<',
+                'type' => 'DATE'
+            ],
+            [
+                'key' => 'event_is_public_after_start',
+                'value' => '1',
+                'compare' => '='
+            ]
         ]
     ],
 ];
-$reports = new WP_Query($args);
+$events = new WP_Query($args);
+
 
 $args = [
     'posts_per_page' => 4,
@@ -58,26 +73,26 @@ $pinnedEvent = new WP_Query($args);
         <div class="upper-half d-flex justify-content-between">
             <div class="text-container">
                 <h1 class="intro-heading">
-                    <?= __("Kysucký tím", "swslovakia") ?>
+                    <?= __("Najväčšie združenie", "swslovakia") ?>
                     <br>
-                    <?= __("za", "swslovakia") ?>
+                    <span><?= __("pre", "swslovakia") ?></span>
                     <span class="labelled-text red big">
-                            <span><?= __("street", "swslovakia") ?></span>
-                        </span>
+                        <span><?= __("street", "swslovakia") ?></span>
+                    </span>
                     <span class="labelled-text white big img bottom-aligned">
-                            <span>
-                                <img src="<?= image_path() ?>/bar.png" alt="Bradlo">
-                            </span>
+                        <span>
+                            <img src="<?= image_path() ?>/bar.png" alt="Bradlo">
                         </span>
+                    </span>
                     <br>
                     <span class="labelled-text white big img top-aligned">
-                            <span>
-                                <img src="<?= image_path() ?>/rings.png" alt="Kruhy">
-                            </span>
+                        <span>
+                            <img src="<?= image_path() ?>/rings.png" alt="Kruhy">
                         </span>
+                    </span>
                     <span class="labelled-text red big">
-                            <span><?= __("workout", "swslovakia") ?></span>
-                        </span>
+                        <span><?= __("workout", "swslovakia") ?></span>
+                    </span>
                 </h1>
                 <p class="secondary-text">
                     <?= get_field("intro_text") ?>
@@ -108,7 +123,14 @@ $pinnedEvent = new WP_Query($args);
         </div>
         <div class="lower-half">
             <span class="bg-text">workout</span>
-            <?php if ($pinnedEvent->have_posts()) : $pinnedEvent->the_post(); $start = strtotime(get_field("event_start")); ?>
+            <?php
+                $pinnedEventImage = null;
+                $image = get_field("home_intro_image");
+            ?>
+            <?php if ($pinnedEvent->have_posts()) : $pinnedEvent->the_post();
+                $start = strtotime(get_field("event_start"));
+                $pinnedEventImage = get_the_post_thumbnail_url(get_the_ID());
+                ?>
                 <a href="<?= get_the_permalink() ?>" class="pinned-event">
                     <div class="date">
                         <div class="day">
@@ -128,9 +150,9 @@ $pinnedEvent = new WP_Query($args);
                     </div>
                 </a>
                 <?php wp_reset_query(); endif ?>
-            <?php if ($image = get_field("home_intro_image")) : ?>
-                <a class="image d-lg-block d-none" data-fslightbox="home-intro-lb" href="<?= $image ?>">
-                    <img src="<?= $image ?>" alt="Intro obrázok">
+            <?php if ($pinnedEventImage || $image) : ?>
+                <a class="image d-lg-block d-none" data-fslightbox="home-intro-lb" href="<?= $pinnedEventImage ?? $image ?>">
+                    <img src="<?= $pinnedEventImage ?? $image ?>" alt="Intro obrázok">
                 </a>
             <?php endif ?>
         </div>
@@ -141,15 +163,11 @@ $pinnedEvent = new WP_Query($args);
 <!--   INTRO SECTION ----- END    -->
 
 
-
-
 <!--  SPONSORS ---- START  -->
 
 <?php get_template_part("template_parts/sections/sponsors"); ?>
 
 <!--  SPONSORS ---- END  -->
-
-
 
 
 <!--   BLOG SECTION ----- START    -->
@@ -187,7 +205,8 @@ $pinnedEvent = new WP_Query($args);
                                     'classes' => ['lg-column']
                                 ]); ?>
                             </div>
-                        <?php $i++; endwhile; wp_reset_query(); ?>
+                            <?php $i++; endwhile;
+                        wp_reset_query(); ?>
                     </div>
                 </div>
             <?php endif ?>
@@ -229,12 +248,12 @@ $pinnedEvent = new WP_Query($args);
     <div class="container">
         <div class="section-id" id="reporty_zo_sutazi"></div>
 
-        <h1 class="heading">Nadchádzajúce podujatia</h1>
+        <h1 class="heading">Aktuálne podujatia</h1>
         <span class="bg-text d-md-block d-none">súťaže</span>
-        <?php if ($reports->have_posts()) : ?>
+        <?php if ($events->have_posts()) : ?>
             <div class="reports-container red-scrollbar">
                 <div class="row">
-                    <?php while ($reports->have_posts()) : $reports->the_post(); ?>
+                    <?php while ($events->have_posts()) : $events->the_post(); ?>
                         <div class="col-3">
                             <?php get_template_part("template_parts/blog/article-card", "", [
                                 'direction' => 'column',
@@ -246,7 +265,7 @@ $pinnedEvent = new WP_Query($args);
                     <?php endwhile ?>
                 </div>
             </div>
-        <?php wp_reset_query(); endif ?>
+            <?php wp_reset_query(); endif ?>
 
         <a href="<?= get_site_url() ?>/podujatia-a-sutaze" class="learn-more-btn mt-5">
             <?= __("Zobraziť viac", "swslovakia") ?>

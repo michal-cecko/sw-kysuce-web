@@ -58,7 +58,7 @@ $events = new WP_Query($args);
                 </div>
             </div>
         </div>
-        <div class="bg-text">compets</div>
+        <div class="bg-text">eventy</div>
     </div>
 </section>
 <?php endif ?>

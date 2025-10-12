@@ -11,16 +11,16 @@ $hasLocalForm = !empty($form);
 
 ?>
 
+<div class="bg-blue-gradient-side-mirrored intro-event-wrapper">
     <div id="eventData" data-id="<?= get_the_ID() ?>" data-form_id="<?= $form?->ID ?>"></div>
     <!--   INTRO ----- START    -->
-    <section id="eventIntro" class="bg-blue-gradient-side-mirrored">
+    <section id="eventIntro">
         <div class="container">
-            <div class="bg-text">compet</div>
             <div class="row intro-text-container">
                 <div class="col-md-7 d-flex justify-content-md-center flex-column justify-content-end">
                     <div class="dot-divided-info red-dot">
                         <div class="info-container">
-                            <div class="tag black small"><?= __("Súťaž", "swslovakia") ?></div>
+                            <div class="tag black small"><?= __("Podujatie", "swslovakia") ?></div>
                             <div class="dot-divided-info">
                                 <span><?= getEventDate(get_the_ID()) ?></span>
                                 <span><?= get_field("event_place", get_the_ID()) ?></span>
@@ -54,18 +54,33 @@ $hasLocalForm = !empty($form);
     <!--   INTRO ----- END    -->
 
 
-<?php if (has_post_thumbnail()) : $objectPosition = get_field("event_thumb_object_position") ?? "center"; ?>
-    <section id="eventThumbSection">
-        <a data-fslightbox="thumb" href="<?= get_the_post_thumbnail_url() ?>">
-            <img src="<?= get_the_post_thumbnail_url() ?>" style="object-position: <?= $objectPosition ?>"
-                 alt="Thumbnail obrázok">
-        </a>
-    </section>
-<?php endif ?>
+    <?php if (has_post_thumbnail()) :
+        $objectPosition = get_field("event_thumb_object_position") ?? "center";
+        $thumbnail_id = get_post_thumbnail_id();
+        $full_image = wp_get_attachment_image_src($thumbnail_id, 'full');
+        $full_url = $full_image[0];
+        $full_width = $full_image[1];
+        $full_height = $full_image[2];
+        ?>
+        <section id="eventThumbSection">
+            <div class="container">
+                <a data-fslightbox="thumb" href="<?= $full_url ?>">
+                    <img src="<?= $full_url ?>"
+                         style="object-position: <?= $objectPosition ?>"
+                         width="<?= $full_width ?>"
+                         height="<?= $full_height ?>"
+                         alt="Thumbnail obrázok">
+                </a>
+            </div>
+        </section>
+    <?php endif; ?>
+
+</div>
 
 
+<div class="bg-blue-gradient">
     <!--   CONTENT ----- START    -->
-    <section id="eventContent" class="bg-blue-gradient">
+    <section id="eventContent">
         <div class="section-id" id="propozicie"></div>
         <div class="event-container">
             <div class="content-wrapper">
@@ -131,4 +146,5 @@ $hasLocalForm = !empty($form);
     </section>
     <!--   CONTENT ----- END    -->
 
-<?php get_footer(); ?>
+    <?php get_footer(); ?>
+</div>

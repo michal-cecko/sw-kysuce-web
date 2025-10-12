@@ -7,12 +7,26 @@ $args = [
     'post_status' => 'publish',
     'post_type' => 'event',
     'meta_query' => [
-        'relation' => "AND",
+        'relation' => "OR",
         [
             'key' => 'event_start',
             'value' => date('Y-m-d'),
             'compare' => '>=',
             'type' => 'DATE'
+        ],
+        [
+            'relation' => 'AND',
+            [
+                'key' => 'event_start',
+                'value' => date('Y-m-d'),
+                'compare' => '<',
+                'type' => 'DATE'
+            ],
+            [
+                'key' => 'event_is_public_after_start',
+                'value' => '1',
+                'compare' => '='
+            ]
         ]
     ],
     'orderby' => 'meta_value',
@@ -33,13 +47,13 @@ $upcomingEvents = new WP_Query($args);
                     <h1 class="intro-heading">
                         <?= __("Plán podujatí združenia", "swslovakia") ?>
                         <span class="labelled-text red big d-none d-md-inline-block">
-                            <span><?= __("Streetworkout Slovakia", "swslovakia") ?></span>
+                            <span><?= __("Street workout kysuce", "swslovakia") ?></span>
                         </span>
                         <span class="labelled-text red big d-inline-block d-md-none">
-                            <span><?= __("Streetworkout", "swslovakia") ?></span>
+                            <span><?= __("Street workout", "swslovakia") ?></span>
                         </span>
                         <span class="labelled-text red big d-inline-block d-md-none">
-                            <span><?= __("Slovakia", "swslovakia") ?></span>
+                            <span><?= __("Kysuce", "swslovakia") ?></span>
                         </span>
                     </h1>
                     <a href="#nadchadzajuce-podujatia" class="learn-more-btn down bigger mb-md-0 mb-5">
@@ -73,10 +87,12 @@ $upcomingEvents = new WP_Query($args);
                     <div class="row">
                         <?php while ($upcomingEvents->have_posts()) : $upcomingEvents->the_post() ?>
                             <div class="col-lg-4 col-md-6">
-                                <?php get_template_part("template_parts/events/event-card", "", [
-                                    'event' => get_post(),
-                                    'show_registration_link' => true
-                                ]) ?>
+                                <?php get_template_part("template_parts/blog/article-card", "", [
+                                    'direction' => 'column',
+                                    'article' => get_post(),
+                                    'size' => 'small',
+                                    'show_category' => false
+                                ]); ?>
                             </div>
                         <?php endwhile;
                         wp_reset_postdata(); ?>
@@ -111,6 +127,11 @@ $upcomingEvents = new WP_Query($args);
                     'value' => date('Y-m-d'),
                     'compare' => '<',
                     'type' => 'DATE'
+                ],
+                [
+                    'key' => 'event_article_link',
+                    'value' => '',
+                    'compare' => '!='
                 ]
             ],
         ];

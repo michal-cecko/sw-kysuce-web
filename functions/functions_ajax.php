@@ -83,6 +83,11 @@ function sw_get_events_by_year()
                 'value' => date('Y-m-d'),
                 'compare' => '<',
                 'type' => 'DATE'
+            ],
+            [
+                'key' => 'event_article_link',
+                'value' => '',
+                'compare' => '!='
             ]
         ],
     ];
