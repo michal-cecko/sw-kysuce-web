@@ -286,7 +286,7 @@ function checkCaptcha($responseToken)
 
     if(LOCALHOST) return true;
 
-    $secretKey = '***REMOVED***';
+    $secretKey = get_option('recaptcha_secret_key', '');
 
     // Send a POST request to the reCAPTCHA verification API
     $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');

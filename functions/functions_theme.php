@@ -162,7 +162,7 @@ function enqueue_custom_scripts_links(): void
     }
 
     if(is_singular('event') || $currentPageSlug == "kontakt") {
-        $recaptchaSiteKey = "***REMOVED***";
+        $recaptchaSiteKey = get_option('recaptcha_site_key', '');
         wp_enqueue_script('recaptcha-js', 'https://www.google.com/recaptcha/api.js?render=' . $recaptchaSiteKey);
     }
 
