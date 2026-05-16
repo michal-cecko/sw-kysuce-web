@@ -64,7 +64,7 @@ export default class Forms extends Commons {
         return new Promise(function (resolve, reject) {
             //TODO FIX CAPTCHA
             /*grecaptcha.ready(function () {
-                grecaptcha.execute("***REMOVED***", {action: 'submit'}).then(function (token) {
+                grecaptcha.execute(window.RECAPTCHA_SITE_KEY, {action: 'submit'}).then(function (token) {
                     resolve(token);
                 }).catch(function (error) {
                     reject(error)
