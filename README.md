@@ -1,96 +1,57 @@
-## Streetworkout Slovakia
-WordPress + PHP | JS + jQuery | Gulp | Sass
+# Streetworkout Slovakia — WordPress theme
 
----
+Custom WordPress theme for **Streetworkout Slovakia**, a club site with events, playgrounds, blog and Mailchimp newsletter signups.
 
-### Spustenie / Kompilácia / Inštalácia
+> **Site is no longer live.** Kept as a portfolio reference for the build approach.
 
----
+## Stack
 
-Prvotné skompilovanie assetov:
-1. ```npm install```
-2. ```gulp production```
+- **WordPress** + **PHP**
+- **ACF** for content fields
+- **JS + jQuery** front-end (Vue not used here)
+- **Sass** styles, **Gulp 4** asset pipeline
+- **Composer** for `phpoffice/phpspreadsheet` (event participant export)
+- **MailChimp PHP wrapper** (vendored under `_mailchimp_api/`)
+- **phpqrcode** (vendored under `qrcodes/phpqrcode/`) for printable event QR codes
 
-Watch assetov
-1. ```gulp assets:watch```
+## Layout
 
-Build na produkciu
-1. ```gulp production```
-2. Build sa nachádza v **/dist** adresári
+```
+├── front-page.php           # homepage
+├── header.php / footer.php
+├── functions/               # split function files
+│   ├── functions_theme.php  # asset enqueue, theme cleanup
+│   ├── functions_helper.php # date/event helpers, reCAPTCHA verify
+│   └── …
+├── functions.php            # require_once for all of the above
+├── template-*.php           # page templates (about, blog, contact, events, playgrounds)
+├── single.php / single-event.php
+├── template_parts/          # partials
+├── custom_plugins/          # bundled in-theme plugins
+│   ├── madelo_starterpack/  # admin pages (incl. reCAPTCHA settings UI)
+│   └── custom-gutenberg-blocks/
+├── assets/                  # sass / js / images / fonts
+├── _mailchimp_api/          # vendored MailChimp PHP lib
+└── qrcodes/phpqrcode/       # vendored QR code generator
+```
 
----
+## Build
 
-### Wordpress + PHP na backend-e
+```bash
+npm install
+npx gulp production          # full sass + scripts build → /dist
+npx gulp assets:watch        # watch sass + js during dev
+```
 
----
+## Required `wp_options` (set via wp-admin under "Madelo Starterpack")
 
-**functions.php** - Zoskupenie všetkých functions súborov dokopy, ktoré sa nachádzajú v priečinku /functions
+| Option | Purpose |
+|---|---|
+| `recaptcha_site_key` | reCAPTCHA v3 site key (used by enqueue + JS) |
+| `recaptcha_secret_key` | reCAPTCHA v3 secret (used by `checkCaptcha` helper) |
 
-**functions_theme.php** - Enqueue assetov a ich verziovanie, všeobecné akcie a filtre, theme cleanup od WP zbytočných linkov a scriptov
+The theme reads these via `get_option()` — no hardcoded keys.
 
-**functions_posttypes.php** - Registrácia nových post typov a všetky funkcie spojené s nimi
+## License
 
-**functions_plugins.php** - Funkcie spojené s pluginmi
-
-**functions_newsletter.php** - Funkcionalita newslettera
-
-**functions_helper.php** - Helper funkcie používané na viacerých miestach
-
-**functions_email.php** - Funkcie spojené s odosielaním emailov z formulárov
-
-**functions_ajax.php** - WP AJAX callbacky
-
-**functions_acf.php** - Registrácia ACF options pages, populatovanie ACF Selectov
-
----
-
-### WP šablóny, stránky a časti šablón
-
----
-
-**header.php** + **footer.php** - header a footer
-
-**front-page.php** - Domovská stránka
-
-**template-example.php** - Šáblona špecifickej stránky
-
-**404.php** - 404 page
-
-/**template_parts** - Priečinok so všetkými časťami šablóny na prepoužívanie
-
----
-
-### Assety - Štýly (Sass)
-
----
-
-Štýly sa nachádzajú v priečinku */assets/sass*.
-
->**#1 IMPORTANT**: Pre zachovanie budúceho čítania kódu niekym iným, dodržiavajte vytvorenú štruktúru štýlov!
-
->**#2 IMPORTANT**: Pre všetky typy selectorov (trieda, id, data atribúty...), ktoré nechcete mať vymazané pri kompilácii pluginom unCSS označte komentárom nasledovne:
->
-> ```
-> /* uncss:ignore */
-> .selector{
->   font-weight: regular;
-> }
->```
-
----
-
-### Assety - Scripty (TS + VueJS)
-
----
-
-Scripty sa nachádzajú v priečinku */assets/js*.
-
-Štruktúra:
-
-* /components - VueJS komponenty
-* /libs - JS knižnice
-* general.js - Bežne používané scripty
-
----
-
-Made by © Synapps
+[MIT](LICENSE) © Michal Čečko
